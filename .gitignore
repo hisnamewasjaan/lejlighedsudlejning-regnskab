@@ -1,0 +1,18 @@
+node_modules
+dist
+dist-ssr
+*.local
+.DS_Store
+.idea
+coverage
+playwright-report
+test-results
+.env
+
+# Personfølsomme skattetal/korrespondance - kun til lokal reference, må ikke i git.
+# Dækker enhver mappe der starter med "udlejning"/"Udlejning" (uanset årstal og store/små
+# bogstaver), ikke kun "udlejning 2025/" - fx "Udlejning 2023/", "udlejning 2021/". Ingen
+# undtagelser - selv README-filer i disse mapper har historisk endt med at indeholde konkrete
+# personfølsomme tal/adresser, så hele mappen holdes ude af git uden exceptions.
+vso-tal.md
+[Uu]dlejning*/**
