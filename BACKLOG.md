@@ -49,8 +49,8 @@ prioriter, når der er tid til det.
       tydeligt markeret som et estimat. Kræver at "hæves eller opspares"-valget nu gemmes pr. år
       (var tidligere kun en side-lokal, ikke-persisteret UI-tilstand))*
 - [x] **Valg af årstal** bør blive husket på tværs af sider/moduler og følges ad for alle moduler. *(implementeret: nyt delt composable `useValgtAar.js`, huskes desuden i localStorage på tværs af sideopdateringer)*
-- [x] Hvad er hvad mht realkreditlån? afdrag, renter og bidrag. Hvad er relevant for VSO? Hvad er relevant for selvangivelsen? *(afklaret: renter og bidrag er begge fradragsberettigede og skattemæssigt sidestillede (ligningsloven § 5, stk. 1) – lægges sammen i rubrik 117. Afdrag er ikke en udgift, kun en balanceforskydning, der reducerer restgælden brugt i kapitalafkastgrundlaget. Da den korrekte fordeling kun kendes fra realkreditinstituttets årsopgørelse – én gang årligt, ikke løbende – er der tilføjet ét samlet årligt felt "Realkreditrenter og -bidrag i alt" på VSO-siden i stedet for bogføring pr. postering. Se SKATTEREGLER.md punkt 9)*
-- [x] Kapitalafkastberegningen. Las os indsætte en tekstual beskrivelse sammen med  beregningen, så man kan forstå hvad der foregår, fx
+- [x] **Hvad er hvad mht realkreditlån**? afdrag, renter og bidrag. Hvad er relevant for VSO? Hvad er relevant for selvangivelsen? *(afklaret: renter og bidrag er begge fradragsberettigede og skattemæssigt sidestillede (ligningsloven § 5, stk. 1) – lægges sammen i rubrik 117. Afdrag er ikke en udgift, kun en balanceforskydning, der reducerer restgælden brugt i kapitalafkastgrundlaget. Da den korrekte fordeling kun kendes fra realkreditinstituttets årsopgørelse – én gang årligt, ikke løbende – er der tilføjet ét samlet årligt felt "Realkreditrenter og -bidrag i alt" på VSO-siden i stedet for bogføring pr. postering. Se SKATTEREGLER.md punkt 9)*
+- [x] **Kapitalafkastberegningen**. Las os indsætte en tekstual beskrivelse sammen med  beregningen, så man kan forstå hvad der foregår, fx
     ```
     Afkastgrundlaget = virksomhedens aktiver minus:
       ▎ 1. Gæld
@@ -60,8 +60,8 @@ prioriter, når der er tid til det.
       ▎ 5. Beløb overført fra VSO til privatøkonomien med virkning fra årets begyndelse
     ```
     *(implementeret: sammenklappelig `<details>`-forklaring under kapitalafkastgrundlag-tabellen på VSO-siden)*
-- [ ] understøt flere udlejninger man kan skifte imellem
-- [x] kan man lave et diagram som viser udregningerne, med mellemregninger der fører frem til resultat-tallene? Jeg forestiller mig en slags "flowchart" eller pipeline(s) som fører frem til resultatet, med mellemregningerne som "nodes" i diagrammet. Det kunne være en slags "forklaring" til brugeren, der viser hvordan de forskellige tal hænger sammen og hvordan de er beregnet. *(implementeret: ny side `/beregning` (`BeregningView.vue`) med de samme tal som VSO-/Rapport-siden, vist som en flowchart-pipeline - input-bokse med fortegn (+/−/×) ned til et resultat, trin for trin. Mellemresultater der genbruges senere (fx Driftsresultat og Kapitalafkast, der begge indgår i Årets overskud) er farvekodet og klikbare, og smooth-scroller tilbage til kilde-trinnet i stedet for at tegne rigtige forbindelseslinjer på tværs af siden)*
+- [ ] **understøt flere udlejninger** man kan skifte imellem
+- [x] kan man lave et **diagram som viser udregningerne**, med mellemregninger der fører frem til resultat-tallene? Jeg forestiller mig en slags "flowchart" eller pipeline(s) som fører frem til resultatet, med mellemregningerne som "nodes" i diagrammet. Det kunne være en slags "forklaring" til brugeren, der viser hvordan de forskellige tal hænger sammen og hvordan de er beregnet. *(implementeret: ny side `/beregning` (`BeregningView.vue`) med de samme tal som VSO-/Rapport-siden, vist som en flowchart-pipeline - input-bokse med fortegn (+/−/×) ned til et resultat, trin for trin. Mellemresultater der genbruges senere (fx Driftsresultat og Kapitalafkast, der begge indgår i Årets overskud) er farvekodet og klikbare, og smooth-scroller tilbage til kilde-trinnet i stedet for at tegne rigtige forbindelseslinjer på tværs af siden)*
 - [x] **Afskrivninger** – appen hardcodede 0 kr. i afskrivninger overalt (kun bygningsafskrivning var
       afklaret som ikke-fradragsberettiget, resten var aldrig wired op). *(implementeret som ét
       simpelt årligt felt "Afskrivninger i alt" på VSO-siden, ligesom realkreditrenter/-bidrag –
@@ -74,3 +74,4 @@ prioriter, når der er tid til det.
       aktiver (anskaffelsessum/-dato pr. aktiv), hvor appen selv beregner den nedskrevne saldo og
       årets 25%-afskrivning år for år, inkl. salg/udrangering. Bevidst fravalgt for nu, da det er en
       del mere at bygge og vedligeholde for noget der ikke bruges endnu.
+- [ ] - **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose..

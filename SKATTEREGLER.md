@@ -1,7 +1,7 @@
 # Skatteregler & afklaringspunkter – Virksomhedsordningen
 
-Dette dokument samler de danske skatteregler appen bygger på, samt punkter der bør afklares (med SKAT/revisor eller ved opslag i loven), **før
-** de tilhørende beregninger implementeres. Se [PLAN.md](./PLAN.md) for den overordnede projektplan.
+Dette dokument samler de danske skatteregler appen bygger på, samt punkter der bør afklares (med SKAT/revisor eller ved opslag i loven), **før** de tilhørende beregninger implementeres.
+Se [PLAN.md](./PLAN.md) for den overordnede projektplan.
 
 ---
 
@@ -12,8 +12,8 @@ Dette dokument samler de danske skatteregler appen bygger på, samt punkter der 
 | Kapitalafkastsats    | 2%   | Endnu ikke offentliggjort (opgøres ud fra gnsn. af Nationalbankens udlånsrente for 1. halvår 2026) |
 | Rentekorrektionssats | 5%   | Endnu ikke offentliggjort                                                                          |
 
-> Satserne fastsættes af Skattestyrelsen én gang årligt og skal **ikke hardcodes
-** i appen – de indtastes/opdateres manuelt i VSO-stamdata hvert år. Tjek altid [skat.dk](https://skat.dk) eller [info.skat.dk C.C.5.3.1.2.4](https://info.skat.dk/data.aspx?oid=1948937) for gældende tal, når 2026-satserne skal bruges.
+> Satserne fastsættes af Skattestyrelsen én gang årligt og skal **ikke hardcodes** i appen – de indtastes/opdateres manuelt i VSO-stamdata hvert år.
+> Tjek altid [skat.dk](https://skat.dk) eller [info.skat.dk C.C.5.3.1.2.4](https://info.skat.dk/data.aspx?oid=1948937) for gældende tal, når 2026-satserne skal bruges.
 
 Kilder:
 
@@ -27,9 +27,12 @@ Kilder:
 
 ### 1. Bygningsafskrivning på beboelsesudlejning (afskrivningsloven §14) ✅ Afklaret
 
-**Svar: Bygningsafskrivning er ikke tilladt.** Afskrivningsloven § 14, stk. 2, nr. 4 undtager udtrykkeligt bygninger der anvendes til beboelse (eller dertil knyttede formål) fra afskrivning – med undtagelse af hotel-, camping- og visse døgninstitutioner. Det er den faktiske anvendelse (beboelse), der er afgørende – ikke om udlejningen i øvrigt er erhvervsmæssig/sker i VSO.
+**Svar: Bygningsafskrivning er ikke tilladt.**
+Afskrivningsloven § 14, stk. 2, nr. 4 undtager udtrykkeligt bygninger der anvendes til beboelse (eller dertil knyttede formål) fra afskrivning – med undtagelse af hotel-, camping- og visse døgninstitutioner.
+Det er den faktiske anvendelse (beboelse), der er afgørende – ikke om udlejningen i øvrigt er erhvervsmæssig/sker i VSO.
 
-**Konsekvens for appen**: 4%-linjen for bygningsafskrivning i afskrivningsskemaet fjernes/deaktiveres for denne lejlighed – der er intet årligt afskrivningsfradrag på selve bygningen. Straksfradrag for løbende vedligeholdelse (100%) og evt. driftsmiddelafskrivning (25% saldo) for løsøre/inventar (fx hårde hvidevarer ved møbleret udlejning) er ikke berørt af denne undtagelse, men følger egne regler.
+**Konsekvens for appen**:
+4%-linjen for bygningsafskrivning i afskrivningsskemaet fjernes/deaktiveres for denne lejlighed – der er intet årligt afskrivningsfradrag på selve bygningen. Straksfradrag for løbende vedligeholdelse (100%) og evt. driftsmiddelafskrivning (25% saldo) for løsøre/inventar (fx hårde hvidevarer ved møbleret udlejning) er ikke berørt af denne undtagelse, men følger egne regler.
 
 Kilder:
 - [Afskrivningsloven § 14 – danskelove.dk](https://danskelove.dk/afskrivningsloven/14)
@@ -38,9 +41,13 @@ Kilder:
 
 ### 2. Indskudskontoens og opsparet overskuds opgørelse ved VSO-opstart ✅ Afklaret
 
-**2a. Indskudskonto.** Fundet i TastSelv's årsopgørelser (rubrik 984 "Indskudskonto ultimo") – uændret år for år siden VSO-opstart, dvs. der er ikke sket nye indskud eller hævninger fra selve indskudskontoen. Indtastes direkte i feltet "Indskudskonto" på VSO-siden. (Det konkrete, bekræftede beløb er personfølsomt og fremgår kun af den lokale, gitignorede `facit.json` – ikke af dette dokument.)
+**2a. Indskudskonto.**
+Fundet i TastSelv's årsopgørelser (rubrik 984 "Indskudskonto ultimo") – uændret år for år siden VSO-opstart, dvs. der er ikke sket nye indskud eller hævninger fra selve indskudskontoen.
+Indtastes direkte i feltet "Indskudskonto" på VSO-siden.
 
-**2b. Opsparet overskud (bruttobeløb).** TastSelv's linje "Fremført til indkomståret → Opsparet overskud i virksomhed, 22% skat" viser kun saldoen ved **starten** af det viste indkomstår – ikke den aktuelle saldo. Den korrekte, opdaterede saldo efter et afsluttet regnskabsår er:
+**2b. Opsparet overskud (bruttobeløb).**
+TastSelv's linje "Fremført til indkomståret → Opsparet overskud i virksomhed, 22% skat" viser kun saldoen ved **starten** af det viste indkomstår – ikke den aktuelle saldo.
+Den korrekte, opdaterede saldo efter et afsluttet regnskabsår er:
 
 `beløb fremført fra sidste år + beløb opstået i det afsluttede år = ny saldo`
 
