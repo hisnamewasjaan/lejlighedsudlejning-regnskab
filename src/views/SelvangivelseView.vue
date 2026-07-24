@@ -24,9 +24,11 @@ function summer(type, ekskluderKategorier) {
 
 // Realkreditrenter/-bidrag indtastes samlet på VSO-siden (ét årligt tal fra realkreditinstituttets
 // opgørelse), ikke som enkelte bogføringsposter - se SKATTEREGLER.md punkt 9. Evt. ældre
-// posteringer i de to kategorier holdes derfor uden for driftsresultatet her også.
+// posteringer i de to kategorier holdes derfor uden for driftsresultatet her også. Depositum ind/ud
+// er hverken indtægt eller udgift, men en gæld til lejeren (samme princip som "skyldigt depositum" i
+// kapitalafkastgrundlaget), og holdes derfor helt uden for både driftsresultat og årets overskud.
 const driftsresultat = computed(
-  () => summer('indtaegt', ['renteindtaegt']) - summer('udgift', ['realkreditrenter', 'realkreditbidrag']),
+  () => summer('indtaegt', ['renteindtaegt', 'depositum']) - summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']),
 )
 const renteindtaegterIAlt = computed(() =>
   aaretsTransaktioner.value.filter((t) => t.type === 'indtaegt' && t.kategori === 'renteindtaegt').reduce((sum, t) => sum + t.belob, 0),
@@ -45,8 +47,8 @@ const kapitalafkastgrundlag = computed(() =>
 const kapitalafkast = computed(() => beregnKapitalafkast(kapitalafkastgrundlag.value, settings.value?.kapitalafkastsats ?? 0))
 const aaretsOverskud = computed(() =>
   beregnAaretsOverskud({
-    indtaegter: summer('indtaegt', ['renteindtaegt']) + renteindtaegterIAlt.value,
-    udgifter: summer('udgift', ['realkreditrenter', 'realkreditbidrag']) + renteudgifterIAlt.value,
+    indtaegter: summer('indtaegt', ['renteindtaegt', 'depositum']) + renteindtaegterIAlt.value,
+    udgifter: summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']) + renteudgifterIAlt.value,
     afskrivninger: settings.value?.afskrivninger ?? 0,
     kapitalafkast: kapitalafkast.value,
   }),

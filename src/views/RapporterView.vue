@@ -32,9 +32,14 @@ function summerPrKategori(type, kategorier) {
 // Renteindtægt/-udgift i virksomheden (TastSelv rubrik 114/117) holdes uden for driftsresultatet
 // (rubrik 111) og resultatopgørelsen herunder – de indgår først i "Skattemæssig opgørelse"
 // nedenfor, jf. den faktiske rubrikstruktur i TastSelv (se vso-tal.md, bekræftet for 2020-2024).
-const DRIFT_INDTAEGT_KATEGORIER = INDTAEGT_KATEGORIER.filter((k) => k.value !== 'renteindtaegt')
+// Depositum ind/ud er hverken indtægt eller udgift - det er en tilbagebetalingspligtig gæld til
+// lejeren (samme princip som "skyldigt depositum" i kapitalafkastgrundlaget) og holdes derfor helt
+// uden for både driftsresultatet og årets overskud, uden at blive lagt til igen som renterne gør.
+const DRIFT_INDTAEGT_KATEGORIER = INDTAEGT_KATEGORIER.filter(
+  (k) => k.value !== 'renteindtaegt' && k.value !== 'depositum',
+)
 const DRIFT_UDGIFT_KATEGORIER = UDGIFT_KATEGORIER.filter(
-  (k) => k.value !== 'realkreditrenter' && k.value !== 'realkreditbidrag',
+  (k) => k.value !== 'realkreditrenter' && k.value !== 'realkreditbidrag' && k.value !== 'depositum_tilbagebetaling',
 )
 
 const indtaegtsLinjer = computed(() => summerPrKategori('indtaegt', DRIFT_INDTAEGT_KATEGORIER).filter((l) => l.belob !== 0))
@@ -81,6 +86,7 @@ const maanedsoversigt = computed(() => {
     udgifter: 0,
   }))
   for (const t of aaretsTransaktioner.value) {
+    if (t.kategori === 'depositum' || t.kategori === 'depositum_tilbagebetaling') continue
     const maaned = Number(t.dato.slice(5, 7))
     const linje = maaneder[maaned - 1]
     if (!linje) continue

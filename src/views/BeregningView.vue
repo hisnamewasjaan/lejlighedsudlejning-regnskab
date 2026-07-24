@@ -21,14 +21,22 @@ const { settings } = useVsoSettings(aar)
 
 const aaretsTransaktioner = computed(() => transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))))
 
+// Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren, og holdes derfor helt
+// uden for driftsresultatet (samme princip som "skyldigt depositum" i kapitalafkastgrundlaget).
 const indtaegterIAlt = computed(() =>
   aaretsTransaktioner.value
-    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'renteindtaegt')
+    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'renteindtaegt' && t.kategori !== 'depositum')
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const udgifterIAlt = computed(() =>
   aaretsTransaktioner.value
-    .filter((t) => t.type === 'udgift' && t.kategori !== 'realkreditrenter' && t.kategori !== 'realkreditbidrag')
+    .filter(
+      (t) =>
+        t.type === 'udgift' &&
+        t.kategori !== 'realkreditrenter' &&
+        t.kategori !== 'realkreditbidrag' &&
+        t.kategori !== 'depositum_tilbagebetaling',
+    )
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const driftsresultat = computed(() => indtaegterIAlt.value - udgifterIAlt.value)

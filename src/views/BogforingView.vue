@@ -97,11 +97,17 @@ async function onSubmit() {
   saved.value = true
 }
 
+// Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren - holdes uden for
+// "Resultat" her, så det matcher driftsresultatet på Rapporter-/VSO-siden.
 const aaretsIndtaegter = computed(() =>
-  transactions.value.filter((t) => t.type === 'indtaegt').reduce((sum, t) => sum + t.belob, 0),
+  transactions.value
+    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'depositum')
+    .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsUdgifter = computed(() =>
-  transactions.value.filter((t) => t.type === 'udgift').reduce((sum, t) => sum + t.belob, 0),
+  transactions.value
+    .filter((t) => t.type === 'udgift' && t.kategori !== 'depositum_tilbagebetaling')
+    .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsHaevninger = computed(() =>
   transactions.value.filter((t) => t.type === 'haevning').reduce((sum, t) => sum + t.belob, 0),

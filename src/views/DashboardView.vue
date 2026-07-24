@@ -33,11 +33,18 @@ const { transactions } = useTransactions()
 const { settings } = useVsoSettings(aar)
 
 const aaretsTransaktioner = computed(() => transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))))
+// Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren, og holdes derfor uden
+// for indtægter/udgifter her (ellers ville et modtaget depositum fejlagtigt hæve det viste
+// "Årets overskud" og "Estimeret skat" nedenfor).
 const aaretsIndtaegter = computed(() =>
-  aaretsTransaktioner.value.filter((t) => t.type === 'indtaegt').reduce((sum, t) => sum + t.belob, 0),
+  aaretsTransaktioner.value
+    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'depositum')
+    .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsUdgifter = computed(() =>
-  aaretsTransaktioner.value.filter((t) => t.type === 'udgift').reduce((sum, t) => sum + t.belob, 0),
+  aaretsTransaktioner.value
+    .filter((t) => t.type === 'udgift' && t.kategori !== 'depositum_tilbagebetaling')
+    .reduce((sum, t) => sum + t.belob, 0),
 )
 
 const kapitalafkast = computed(() => {

@@ -79,9 +79,11 @@ const aaretsTransaktioner = computed(() =>
 )
 // Renteindtægt/-udgift i virksomheden (TastSelv rubrik 114/117) holdes uden for driftsresultatet
 // (rubrik 111), men indgår i årets overskud (rubrik 149) – se RapporterView.vue og vso-tal.md.
+// Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren (samme princip som
+// "skyldigt depositum" i kapitalafkastgrundlaget), og holdes derfor helt uden for begge dele.
 const aaretsDriftIndtaegter = computed(() =>
   aaretsTransaktioner.value
-    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'renteindtaegt')
+    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'renteindtaegt' && t.kategori !== 'depositum')
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsRenteindtaegt = computed(() =>
@@ -95,7 +97,13 @@ const aaretsRenteindtaegt = computed(() =>
 // for driftsudgifterne, så de ikke tælles dobbelt sammen med det indtastede årlige beløb.
 const aaretsDriftUdgifter = computed(() =>
   aaretsTransaktioner.value
-    .filter((t) => t.type === 'udgift' && t.kategori !== 'realkreditrenter' && t.kategori !== 'realkreditbidrag')
+    .filter(
+      (t) =>
+        t.type === 'udgift' &&
+        t.kategori !== 'realkreditrenter' &&
+        t.kategori !== 'realkreditbidrag' &&
+        t.kategori !== 'depositum_tilbagebetaling',
+    )
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsDriftsresultat = computed(() => aaretsDriftIndtaegter.value - aaretsDriftUdgifter.value)
