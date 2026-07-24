@@ -6,15 +6,19 @@ import { useVsoSettings } from '@/composables/useVsoSettings'
 import { beregnAaretsOverskud, beregnKapitalafkast, beregnKapitalafkastgrundlag } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
 import { useValgtAar } from '@/composables/useValgtAar'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatKr, formatTal } from '@/utils/format'
 
 const aar = useValgtAar()
+const ejendom = useValgtEjendom()
 
-const { property } = useProperty()
+const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
-const { settings } = useVsoSettings(aar)
+const { settings } = useVsoSettings(ejendom, aar)
 
-const aaretsTransaktioner = computed(() => transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))))
+const aaretsTransaktioner = computed(() =>
+  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
+)
 
 function summer(type, ekskluderKategorier) {
   return aaretsTransaktioner.value

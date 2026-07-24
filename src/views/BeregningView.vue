@@ -11,15 +11,19 @@ import {
 } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
 import { useValgtAar } from '@/composables/useValgtAar'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatKr as kr } from '@/utils/format'
 
 const aar = useValgtAar()
+const ejendom = useValgtEjendom()
 
-const { property } = useProperty()
+const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
-const { settings } = useVsoSettings(aar)
+const { settings } = useVsoSettings(ejendom, aar)
 
-const aaretsTransaktioner = computed(() => transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))))
+const aaretsTransaktioner = computed(() =>
+  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
+)
 
 // Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren, og holdes derfor helt
 // uden for driftsresultatet (samme princip som "skyldigt depositum" i kapitalafkastgrundlaget).

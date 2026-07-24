@@ -69,4 +69,31 @@ db.version(4).stores({
     })
 })
 
+// Understøtter flere udlejningsejendomme man kan skifte imellem, i stedet for at appen implicit
+// antager der findes præcis én. tenants/transactions/recurringTransactions/vsoSettings får et
+// ejendomId-felt; vsoSettings får desuden et compound-indeks [ejendomId+aar], da indstillingerne
+// nu er pr. ejendom pr. år, ikke kun pr. år. Fandtes der allerede én ejendom (kun muligt før denne
+// ændring), tagges alle eksisterende rækker automatisk med dens id, så eksisterende brugere ikke
+// mister deres data - findes ingen ejendom endnu, er der intet at migrere.
+db.version(5).stores({
+  property: '++id, adresse, bfeNr',
+  tenants: '++id, ejendomId, navn, lejemaalStart, lejemaalSlut',
+  transactions: '++id, ejendomId, dato, type, kategori, belob, tenantId',
+  vsoSettings: '++id, ejendomId, aar, [ejendomId+aar], kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
+  recurringTransactions: '++id, ejendomId, type, kategori, hyppighed, startDato, slutDato, tenantId',
+}).upgrade(async (tx) => {
+  const ejendomme = await tx.table('property').toArray()
+  const foersteEjendomId = ejendomme[0]?.id
+  if (foersteEjendomId == null) return
+
+  for (const tabel of ['tenants', 'transactions', 'recurringTransactions', 'vsoSettings']) {
+    await tx
+      .table(tabel)
+      .toCollection()
+      .modify((r) => {
+        if (r.ejendomId == null) r.ejendomId = foersteEjendomId
+      })
+  }
+})
+
 export default db

@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { db } from '@/db'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 
 export const HYPPIGHED_LABELS = {
   maanedlig: 'Månedlig',
@@ -52,6 +53,8 @@ export function beregnManglendePerioder({ template, transactions, tilDato }) {
   })
 }
 
+const valgtEjendomId = useValgtEjendom()
+
 export function useRecurringTransactions() {
   const templates = ref([])
   const loading = ref(true)
@@ -63,7 +66,7 @@ export function useRecurringTransactions() {
   }
 
   async function addTemplate(data) {
-    await db.recurringTransactions.add(data)
+    await db.recurringTransactions.add({ ejendomId: valgtEjendomId.value, ...data })
     await load()
   }
 

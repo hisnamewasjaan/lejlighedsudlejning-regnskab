@@ -60,7 +60,14 @@ prioriter, når der er tid til det.
       ▎ 5. Beløb overført fra VSO til privatøkonomien med virkning fra årets begyndelse
     ```
     *(implementeret: sammenklappelig `<details>`-forklaring under kapitalafkastgrundlag-tabellen på VSO-siden)*
-- [ ] **understøt flere udlejninger** man kan skifte imellem
+- [x] **understøt flere udlejninger** man kan skifte imellem *(implementeret: `tenants`/`transactions`/
+      `recurringTransactions`/`vsoSettings` har fået et `ejendomId`-felt (Dexie-migrering v5, tagger
+      automatisk eksisterende data med den ene tidligere implicitte ejendom). Ny global ejendoms-vælger
+      i navigationen (`useValgtEjendom.js`, samme mønster som årstals-vælgeren), en ny "Dine
+      ejendomme"-sektion på Stamdata til at oprette/skifte, og alle sider filtrerer nu deres data efter
+      den valgte ejendom. Sletning af en ejendom er bevidst ikke bygget denne omgang (se separat idé)*
+- [ ] **Slet en ejendom** – kaskade-sletning af dens lejere/posteringer/VSO-tal. Bevidst udeladt fra
+      "understøt flere ejendomme" ovenfor, da det er en mere risikabel handling.
 - [x] kan man lave et **diagram som viser udregningerne**, med mellemregninger der fører frem til resultat-tallene? Jeg forestiller mig en slags "flowchart" eller pipeline(s) som fører frem til resultatet, med mellemregningerne som "nodes" i diagrammet. Det kunne være en slags "forklaring" til brugeren, der viser hvordan de forskellige tal hænger sammen og hvordan de er beregnet. *(implementeret: ny side `/beregning` (`BeregningView.vue`) med de samme tal som VSO-/Rapport-siden, vist som en flowchart-pipeline - input-bokse med fortegn (+/−/×) ned til et resultat, trin for trin. Mellemresultater der genbruges senere (fx Driftsresultat og Kapitalafkast, der begge indgår i Årets overskud) er farvekodet og klikbare, og smooth-scroller tilbage til kilde-trinnet i stedet for at tegne rigtige forbindelseslinjer på tværs af siden)*
 - [x] **Afskrivninger** – appen hardcodede 0 kr. i afskrivninger overalt (kun bygningsafskrivning var
       afklaret som ikke-fradragsberettiget, resten var aldrig wired op). *(implementeret som ét
@@ -74,5 +81,5 @@ prioriter, når der er tid til det.
       aktiver (anskaffelsessum/-dato pr. aktiv), hvor appen selv beregner den nedskrevne saldo og
       årets 25%-afskrivning år for år, inkl. salg/udrangering. Bevidst fravalgt for nu, da det er en
       del mere at bygge og vedligeholde for noget der ikke bruges endnu.
-- [ ] **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose.. 
+- [ ] **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose..
 - [ ] **Værktøj til at beregne tilbagebetaling/merbetaling** i forhold til betalt aconto til forbrug

@@ -7,10 +7,12 @@ import { useVsoSettings } from '@/composables/useVsoSettings'
 import { beregnAaretsOverskud, beregnKapitalafkast, beregnKapitalafkastgrundlag } from '@/composables/useVsoBeregning'
 import { beregnHuslejestatus, findAktivLejer } from '@/composables/useHuslejestatus'
 import { useValgtAar } from '@/composables/useValgtAar'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatKr as kr } from '@/utils/format'
 
 const now = new Date()
 const aar = useValgtAar()
+const ejendom = useValgtEjendom()
 
 // For indeværende år vises status frem til nuværende måned; for et afsluttet år vises alle 12
 // måneder; for et fremtidigt år er der endnu intet forfaldent.
@@ -27,12 +29,14 @@ const referenceDato = computed(() => {
   return now
 })
 
-const { property } = useProperty()
-const { tenants } = useTenants()
+const { property } = useProperty(ejendom)
+const { tenants } = useTenants(ejendom)
 const { transactions } = useTransactions()
-const { settings } = useVsoSettings(aar)
+const { settings } = useVsoSettings(ejendom, aar)
 
-const aaretsTransaktioner = computed(() => transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))))
+const aaretsTransaktioner = computed(() =>
+  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
+)
 // Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren, og holdes derfor uden
 // for indtægter/udgifter her (ellers ville et modtaget depositum fejlagtigt hæve det viste
 // "Årets overskud" og "Estimeret skat" nedenfor).
@@ -75,7 +79,7 @@ const aktivLejer = computed(() => findAktivLejer(tenants.value, referenceDato.va
 const huslejestatus = computed(() =>
   beregnHuslejestatus({
     tenant: aktivLejer.value,
-    transactions: transactions.value,
+    transactions: aaretsTransaktioner.value,
     aar: aar.value,
     tilOgMedMaaned: tilOgMedMaaned.value,
   }),

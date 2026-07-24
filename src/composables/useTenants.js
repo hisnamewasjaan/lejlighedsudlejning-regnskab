@@ -1,18 +1,25 @@
-import { ref } from 'vue'
+import { isRef, ref, unref, watch } from 'vue'
 import { db } from '@/db'
 
-export function useTenants() {
+/**
+ * @param {import('vue').Ref<number|null> | number | null} ejendomId
+ */
+export function useTenants(ejendomId) {
   const tenants = ref([])
   const loading = ref(true)
 
   async function load() {
+    const id = unref(ejendomId)
     loading.value = true
-    tenants.value = await db.tenants.orderBy('lejemaalStart').reverse().toArray()
+    tenants.value =
+      id != null
+        ? await db.tenants.where('ejendomId').equals(id).sortBy('lejemaalStart').then((r) => r.reverse())
+        : []
     loading.value = false
   }
 
   async function addTenant(data) {
-    const id = await db.tenants.add(data)
+    const id = await db.tenants.add({ ...data, ejendomId: unref(ejendomId) })
     await load()
     return id
   }
@@ -27,7 +34,11 @@ export function useTenants() {
     await load()
   }
 
-  load()
+  if (isRef(ejendomId)) {
+    watch(ejendomId, load, { immediate: true })
+  } else {
+    load()
+  }
 
   return { tenants, loading, addTenant, updateTenant, deleteTenant }
 }
