@@ -198,14 +198,42 @@ const beskattetPrMaaned = computed(() => Math.round(form.beskattetTilRaadighed /
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">VSO-stamdata for {{ aar }}</h2>
       <form class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2" @submit.prevent="onSaveSettings">
-        <label class="flex flex-col gap-1 text-sm">
-          Kapitalafkastsats (%)
-          <input v-model.number="form.kapitalafkastsatsPct" type="number" step="0.1" class="rounded border border-slate-300 px-3 py-2" />
-        </label>
-        <label class="flex flex-col gap-1 text-sm">
-          Rentekorrektionssats (%)
-          <input v-model.number="form.rentekorrektionssatsPct" type="number" step="0.1" class="rounded border border-slate-300 px-3 py-2" />
-        </label>
+        <div class="flex flex-col gap-1 text-sm">
+          <label for="kapitalafkastsats">Kapitalafkastsats (%)</label>
+          <input
+            id="kapitalafkastsats"
+            v-model.number="form.kapitalafkastsatsPct"
+            type="number"
+            step="0.1"
+            class="rounded border border-slate-300 px-3 py-2"
+          />
+          <span class="text-xs text-slate-500">
+            Fastsættes af Skattestyrelsen én gang årligt (VSL § 9) – skal ikke hardcodes, slås op og
+            indtastes manuelt hvert år. Se
+            <a href="https://info.skat.dk/data.aspx?oid=1948937" target="_blank" rel="noopener" class="underline">
+              kapitalafkastsatsen på info.skat.dk
+            </a>
+            (se også SKATTEREGLER.md).
+          </span>
+        </div>
+        <div class="flex flex-col gap-1 text-sm">
+          <label for="rentekorrektionssats">Rentekorrektionssats (%)</label>
+          <input
+            id="rentekorrektionssats"
+            v-model.number="form.rentekorrektionssatsPct"
+            type="number"
+            step="0.1"
+            class="rounded border border-slate-300 px-3 py-2"
+          />
+          <span class="text-xs text-slate-500">
+            Fastsættes af Skattestyrelsen én gang årligt (VSL § 11) – bruges kun til beregningen hvis
+            indskudskontoen er negativ. Se
+            <a href="https://info.skat.dk/data.aspx?oid=1948910" target="_blank" rel="noopener" class="underline">
+              rentekorrektionssatsen på info.skat.dk
+            </a>
+            (se også SKATTEREGLER.md).
+          </span>
+        </div>
         <label class="flex flex-col gap-1 text-sm">
           Indskudskonto (kr.)
           <input v-model.number="form.indskudskonto" type="number" class="rounded border border-slate-300 px-3 py-2" />
