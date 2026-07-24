@@ -5,13 +5,14 @@ import { describe, expect, it } from 'vitest'
 import { beregnAaretsOverskud, fordelHaevning } from '@/composables/useVsoBeregning'
 
 // Facit-filen ligger i "udlejning 2025/" (gitignored, personfølsomme skattetal) og findes derfor
-// ikke nødvendigvis i alle miljøer. Testene springes over, hvis filen mangler.
+// ikke nødvendigvis i alle miljøer - falder i så fald tilbage til de opdigtede tal i
+// tests/fixtures/ (se README.md der), så testen stadig kører i CI/på en frisk klone.
 // Bemærk: mappenavnet indeholder et mellemrum, så vi bruger path.resolve fremfor URL-parsing.
-const facitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../udlejning 2025/facit.json')
-const harFacit = existsSync(facitPath)
+const egenFacitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../udlejning 2025/facit.json')
+const facitPath = existsSync(egenFacitPath) ? egenFacitPath : resolve(dirname(fileURLToPath(import.meta.url)), '../fixtures/facit.json')
 
-describe.skipIf(!harFacit)('Regnskab 2025 – validering mod revisorens tal', () => {
-  const facit = harFacit ? JSON.parse(readFileSync(facitPath, 'utf-8')) : null
+describe('Regnskab 2025 – validering mod revisorens tal', () => {
+  const facit = JSON.parse(readFileSync(facitPath, 'utf-8'))
 
   it('årets overskud (rubrik 149) matcher revisorens opgørelse', () => {
     const indtaegter = facit.rubrik111_overskudFoerRenterOgKapitalafkast + facit.rubrik114_renteindtaegt

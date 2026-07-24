@@ -17,13 +17,16 @@ import { expect, test } from '@playwright/test'
  * og årets overskud (149), mens driftsresultat/renter (111/114/117) - som kommer direkte fra
  * bogførte posteringer og det indtastede VSO-felt for rubrik 117 - skal matche eksakt.
  *
- * "udlejning 2025/" er gitignored (personfølsomme skattetal). Testen springes over, hvis filen
- * mangler i det aktuelle miljø - alle rigtige tal læses herfra, ingen står hardcodet i denne fil.
+ * "udlejning 2025/" er gitignored (personfølsomme skattetal) og findes derfor ikke nødvendigvis i
+ * alle miljøer - falder i så fald tilbage til de opdigtede tal i tests/fixtures/facit.json (se
+ * README.md der), så testen stadig kører i CI/på en frisk klone. Med de opdigtede tal er
+ * afvigelsen på kapitalafkast/årets overskud 0 kr.; tolerancen nedenfor er sat for at rumme den
+ * kendte, dokumenterede afrundingsafvigelse når testen køres mod de rigtige, lokale tal.
  */
-const facitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../udlejning 2025/facit.json')
-const harFacit = existsSync(facitPath)
-const facit = harFacit ? JSON.parse(readFileSync(facitPath, 'utf-8')) : null
-const PRIMO_2025 = harFacit ? facit.kapitalafkastgrundlagPrimo2025 : null
+const egenFacitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../udlejning 2025/facit.json')
+const facitPath = existsSync(egenFacitPath) ? egenFacitPath : resolve(dirname(fileURLToPath(import.meta.url)), '../tests/fixtures/facit.json')
+const facit = JSON.parse(readFileSync(facitPath, 'utf-8'))
+const PRIMO_2025 = facit.kapitalafkastgrundlagPrimo2025
 
 function parseKr(tekst) {
   return Number(
@@ -36,8 +39,6 @@ function parseKr(tekst) {
 }
 
 test.describe('Regnskab 2025 – e2e mod bekræftede TastSelv-tal', () => {
-  test.skip(!harFacit, 'Kræver lokal, gitignored udlejning 2025/facit.json')
-
   test('Rapporter viser de bekræftede 2025-rubrikker efter fuld UI-indtastning med de rigtige primo-tal', async ({ page }) => {
     await page.goto('/stamdata')
     await page.getByLabel('Anskaffelsespris (kr.)').fill(String(PRIMO_2025.anskaffelsessum))

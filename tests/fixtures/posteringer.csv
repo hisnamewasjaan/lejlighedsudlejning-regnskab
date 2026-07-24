@@ -1,0 +1,21 @@
+Dato;Kategori;Underkategori;Tekst;Beløb;Saldo;Status;Afstemt;
+31.01.2025;Øvrige indtægter;Lejeindtægt;Leje januar 2025;16.500,00;16.500,00;Udført;Nej;
+28.02.2025;Øvrige indtægter;Lejeindtægt;Leje februar 2025;16.500,00;33.000,00;Udført;Nej;
+31.03.2025;Øvrige indtægter;Lejeindtægt;Leje marts 2025;16.500,00;49.500,00;Udført;Nej;
+30.04.2025;Øvrige indtægter;Lejeindtægt;Leje april 2025;16.500,00;66.000,00;Udført;Nej;
+31.05.2025;Øvrige indtægter;Lejeindtægt;Leje maj 2025;16.500,00;82.500,00;Udført;Nej;
+30.06.2025;Øvrige indtægter;Lejeindtægt;Leje juni 2025;16.500,00;99.000,00;Udført;Nej;
+31.07.2025;Øvrige indtægter;Lejeindtægt;Leje juli 2025;16.500,00;115.500,00;Udført;Nej;
+31.08.2025;Øvrige indtægter;Lejeindtægt;Leje august 2025;16.500,00;132.000,00;Udført;Nej;
+30.09.2025;Øvrige indtægter;Lejeindtægt;Leje september 2025;16.500,00;148.500,00;Udført;Nej;
+31.10.2025;Øvrige indtægter;Lejeindtægt;Leje oktober 2025;16.500,00;165.000,00;Udført;Nej;
+30.11.2025;Øvrige indtægter;Lejeindtægt;Leje november 2025;16.500,00;181.500,00;Udført;Nej;
+31.12.2025;Øvrige indtægter;Lejeindtægt;Leje december 2025;16.500,00;198.000,00;Udført;Nej;
+15.01.2025;Bolig;Fællesudgifter;E/F Testforeningen;-24.000,00;174.000,00;Udført;Nej;
+20.01.2025;Bolig;Ejendomsskat;Grundskyld a conto;-110,82;173.889,18;Udført;Nej;
+15.02.2025;Bolig;Realkreditlån;Realkredit Testbank;-7.828,00;166.061,18;Udført;Nej;
+10.03.2025;Øvrige udgifter;Diverse;Revisor 2024-regnskab;-5.000,00;161.061,18;Udført;Nej;
+05.06.2025;Øvrige udgifter;Diverse;Depositum retur tidl. lejer;-16.500,00;144.561,18;Udført;Nej;
+12.07.2025;Øvrige udgifter;Diverse;Consumption fee;-300,00;144.261,18;Udført;Nej;
+30.09.2025;Renter;;Rente;50,00;144.311,18;Udført;Nej;
+15.08.2025;Øvrige udgifter;Overførsler;Donor;-40.000,00;104.311,18;Udført;Nej;privat brug

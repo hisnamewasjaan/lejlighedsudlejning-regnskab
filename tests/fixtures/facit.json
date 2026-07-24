@@ -1,0 +1,21 @@
+{
+  "kapitalafkastgrundlagPrimo2025": {
+    "anskaffelsessum": 2000000,
+    "banksaldo": 50000,
+    "realkreditgaeld": 900000,
+    "skyldigtDepositum": 16500,
+    "beskattetTilRaadighed": 0
+  },
+  "kapitalafkastsats": 0.02,
+  "rubrik111_overskudFoerRenterOgKapitalafkast": 150000,
+  "rubrik114_renteindtaegt": 50,
+  "rubrik117_renteudgift": 6000,
+  "rubrik148_kapitalafkast": 22670,
+  "rubrik149_indkomstTilVirksomhedsbeskatning": 121380,
+  "beskattetTilRaadighed2026": 30000,
+  "opsparetOverskudBruttoFremfoertTil2026": 200000,
+  "indskudskontoUltimo": 300000,
+  "ejendom": {
+    "grundskyld2025": 2200
+  }
+}

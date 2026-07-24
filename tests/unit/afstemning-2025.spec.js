@@ -5,12 +5,14 @@ import { describe, expect, it } from 'vitest'
 import { decodeCsvBuffer, parseBankCsv } from '@/utils/bankCsv'
 import { beregnAaretsOverskud } from '@/composables/useVsoBeregning'
 
-// "udlejning 2025/" er gitignored (personfølsomme banktransaktioner). Testene springes over,
-// hvis mappen/filerne mangler i det aktuelle miljø.
-const mappe = resolve(dirname(fileURLToPath(import.meta.url)), '../../udlejning 2025')
+// "udlejning 2025/" er gitignored (personfølsomme banktransaktioner) og findes derfor ikke
+// nødvendigvis i alle miljøer - falder i så fald tilbage til de opdigtede tal i tests/fixtures/
+// (se README.md der), så testen stadig kører i CI/på en frisk klone.
+const egenMappe = resolve(dirname(fileURLToPath(import.meta.url)), '../../udlejning 2025')
+const harEgenData = existsSync(resolve(egenMappe, 'posteringer.csv')) && existsSync(resolve(egenMappe, 'facit.json'))
+const mappe = harEgenData ? egenMappe : resolve(dirname(fileURLToPath(import.meta.url)), '../fixtures')
 const csvPath = resolve(mappe, 'posteringer.csv')
 const facitPath = resolve(mappe, 'facit.json')
-const harData = existsSync(csvPath) && existsSync(facitPath)
 
 // Kategoriserer en banklinje til appens type/kategori-model.
 //
@@ -38,9 +40,9 @@ function kategoriser(row) {
   return { type: 'ukendt', kategori: row.underkategori }
 }
 
-describe.skipIf(!harData)('Afstemning 2025 – rigtige banktransaktioner', () => {
-  const facit = harData ? JSON.parse(readFileSync(facitPath, 'utf-8')) : null
-  const rows = harData ? parseBankCsv(decodeCsvBuffer(readFileSync(csvPath))) : []
+describe('Afstemning 2025 – rigtige banktransaktioner', () => {
+  const facit = JSON.parse(readFileSync(facitPath, 'utf-8'))
+  const rows = parseBankCsv(decodeCsvBuffer(readFileSync(csvPath)))
   const posteringer = rows.map((row) => ({ ...row, ...kategoriser(row) })).filter((p) => p.type !== null)
 
   it('alle rækker genkendes (ingen postering havner som "ukendt")', () => {
