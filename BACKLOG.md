@@ -74,4 +74,5 @@ prioriter, når der er tid til det.
       aktiver (anskaffelsessum/-dato pr. aktiv), hvor appen selv beregner den nedskrevne saldo og
       årets 25%-afskrivning år for år, inkl. salg/udrangering. Bevidst fravalgt for nu, da det er en
       del mere at bygge og vedligeholde for noget der ikke bruges endnu.
-- [ ] - **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose..
+- [ ] **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose.. 
+- [ ] **Værktøj til at beregne tilbagebetaling/merbetaling** i forhold til betalt aconto til forbrug
