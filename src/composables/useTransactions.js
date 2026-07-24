@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { db } from '@/db'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 
 export const INDTAEGT_KATEGORIER = [
   { value: 'husleje', label: 'Husleje' },
@@ -33,9 +34,11 @@ async function load() {
 
 load()
 
+const valgtEjendomId = useValgtEjendom()
+
 export function useTransactions() {
   async function addTransaction(data) {
-    await db.transactions.add(data)
+    await db.transactions.add({ ejendomId: valgtEjendomId.value, ...data })
     await load()
   }
 

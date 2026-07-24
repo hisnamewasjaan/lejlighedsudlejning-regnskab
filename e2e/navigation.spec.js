@@ -1,5 +1,16 @@
 import { expect, test } from '@playwright/test'
 
+// Hver test starter med en frisk browser-kontekst (tom IndexedDB), og appen kræver nu en valgt
+// ejendom før Bogføring/VSO/Rapporter/Selvangivelse/Dashboard viser noget - så alle tests opretter
+// først én, fælles for hele filen.
+test.beforeEach(async ({ page }) => {
+  await page.goto('/stamdata')
+  await page.getByRole('button', { name: '+ Opret ny ejendom' }).click()
+  await page.getByLabel('Adresse på ny ejendom').fill('Testvej 1, 2100 København Ø')
+  await page.getByRole('button', { name: 'Opret ejendom' }).click()
+  await expect(page.getByRole('heading', { name: 'Lejlighedsoplysninger' })).toBeVisible()
+})
+
 test('kan navigere mellem hovedsiderne', async ({ page }) => {
   const nav = page.getByRole('navigation')
 

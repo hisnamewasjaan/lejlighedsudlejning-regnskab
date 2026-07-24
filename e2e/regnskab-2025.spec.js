@@ -39,6 +39,15 @@ function parseKr(tekst) {
 }
 
 test.describe('Regnskab 2025 – e2e mod bekræftede TastSelv-tal', () => {
+  // Appen kræver nu en valgt ejendom før Bogføring/VSO/Rapporter viser noget.
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/stamdata')
+    await page.getByRole('button', { name: '+ Opret ny ejendom' }).click()
+    await page.getByLabel('Adresse på ny ejendom').fill('Udlejningsejendommen')
+    await page.getByRole('button', { name: 'Opret ejendom' }).click()
+    await expect(page.getByRole('heading', { name: 'Lejlighedsoplysninger' })).toBeVisible()
+  })
+
   test('Rapporter viser de bekræftede 2025-rubrikker efter fuld UI-indtastning med de rigtige primo-tal', async ({ page }) => {
     await page.goto('/stamdata')
     await page.getByLabel('Anskaffelsespris (kr.)').fill(String(PRIMO_2025.anskaffelsessum))

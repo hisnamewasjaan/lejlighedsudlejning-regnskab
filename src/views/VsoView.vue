@@ -13,13 +13,15 @@ import {
 } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
 import { useValgtAar } from '@/composables/useValgtAar'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatKr as kr } from '@/utils/format'
 
 const aar = useValgtAar()
+const ejendom = useValgtEjendom()
 
-const { property } = useProperty()
+const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
-const { settings, save: saveSettings } = useVsoSettings(aar)
+const { settings, save: saveSettings } = useVsoSettings(ejendom, aar)
 
 const form = reactive({
   kapitalafkastsatsPct: 2,
@@ -75,7 +77,7 @@ async function onSaveSettings() {
 }
 
 const aaretsTransaktioner = computed(() =>
-  transactions.value.filter((t) => t.dato?.startsWith(String(aar.value))),
+  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
 )
 // Renteindtægt/-udgift i virksomheden (TastSelv rubrik 114/117) holdes uden for driftsresultatet
 // (rubrik 111), men indgår i årets overskud (rubrik 149) – se RapporterView.vue og vso-tal.md.
@@ -145,7 +147,7 @@ const rentekorrektion = computed(() =>
 // men endnu ikke fysisk hævet fra virksomhedens konto. Samme logik som fordelHaevning() bruger til
 // at fordele en hævning - her beregnes i stedet resten af "puljen" efter årets faktiske hævninger.
 const naesteAar = computed(() => aar.value + 1)
-const { settings: naesteAarsSettings, save: gemNaesteAarsSettings } = useVsoSettings(naesteAar)
+const { settings: naesteAarsSettings, save: gemNaesteAarsSettings } = useVsoSettings(ejendom, naesteAar)
 const forslagTilHensatNaesteAar = computed(() =>
   beregnForslagTilHensatNaesteAar({
     beskattetTilRaadighedPrimo: form.beskattetTilRaadighed,

@@ -7,10 +7,15 @@ import {
   useRecurringTransactions,
 } from '@/composables/useRecurringTransactions'
 import CsvImport from '@/components/CsvImport.vue'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatTal } from '@/utils/format'
 
+const ejendom = useValgtEjendom()
 const { transactions, addTransaction, deleteTransaction } = useTransactions()
 const { templates, addTemplate, deleteTemplate } = useRecurringTransactions()
+
+const ejendomsTransaktioner = computed(() => transactions.value.filter((t) => t.ejendomId === ejendom.value))
+const ejendomsTemplates = computed(() => templates.value.filter((t) => t.ejendomId === ejendom.value))
 
 const kategoriLabels = Object.fromEntries(
   [...INDTAEGT_KATEGORIER, ...UDGIFT_KATEGORIER].map((k) => [k.value, k.label]),
@@ -45,9 +50,9 @@ async function onAddTemplate() {
 }
 
 const manglendePrTemplate = computed(() =>
-  templates.value.map((template) => ({
+  ejendomsTemplates.value.map((template) => ({
     template,
-    manglende: beregnManglendePerioder({ template, transactions: transactions.value, tilDato: idag }),
+    manglende: beregnManglendePerioder({ template, transactions: ejendomsTransaktioner.value, tilDato: idag }),
   })),
 )
 
@@ -100,17 +105,17 @@ async function onSubmit() {
 // Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren - holdes uden for
 // "Resultat" her, så det matcher driftsresultatet på Rapporter-/VSO-siden.
 const aaretsIndtaegter = computed(() =>
-  transactions.value
+  ejendomsTransaktioner.value
     .filter((t) => t.type === 'indtaegt' && t.kategori !== 'depositum')
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsUdgifter = computed(() =>
-  transactions.value
+  ejendomsTransaktioner.value
     .filter((t) => t.type === 'udgift' && t.kategori !== 'depositum_tilbagebetaling')
     .reduce((sum, t) => sum + t.belob, 0),
 )
 const aaretsHaevninger = computed(() =>
-  transactions.value.filter((t) => t.type === 'haevning').reduce((sum, t) => sum + t.belob, 0),
+  ejendomsTransaktioner.value.filter((t) => t.type === 'haevning').reduce((sum, t) => sum + t.belob, 0),
 )
 </script>
 
@@ -147,7 +152,7 @@ const aaretsHaevninger = computed(() =>
         perioder der mangler at blive registreret.
       </p>
 
-      <ul v-if="templates.length" class="mt-4 divide-y divide-slate-200">
+      <ul v-if="ejendomsTemplates.length" class="mt-4 divide-y divide-slate-200">
         <li v-for="entry in manglendePrTemplate" :key="entry.template.id" class="py-3 text-sm">
           <div class="flex items-center justify-between">
             <div>
@@ -261,7 +266,7 @@ const aaretsHaevninger = computed(() =>
 
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">Posteringer</h2>
-      <table v-if="transactions.length" class="mt-4 w-full text-left text-sm">
+      <table v-if="ejendomsTransaktioner.length" class="mt-4 w-full text-left text-sm">
         <thead class="text-slate-500">
           <tr>
             <th class="pb-2">Dato</th>
@@ -273,7 +278,7 @@ const aaretsHaevninger = computed(() =>
           </tr>
         </thead>
         <tbody class="divide-y divide-slate-200">
-          <tr v-for="t in transactions" :key="t.id">
+          <tr v-for="t in ejendomsTransaktioner" :key="t.id">
             <td class="py-2">{{ t.dato }}</td>
             <td class="py-2">
               <span :class="TYPE_KLASSER[t.type]">{{ TYPE_LABELS[t.type] }}</span>

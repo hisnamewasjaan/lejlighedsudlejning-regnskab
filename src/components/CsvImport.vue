@@ -2,7 +2,9 @@
 import { computed, ref } from 'vue'
 import { decodeCsvBuffer, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
 import { INDTAEGT_KATEGORIER, UDGIFT_KATEGORIER, useTransactions } from '@/composables/useTransactions'
+import { useValgtEjendom } from '@/composables/useValgtEjendom'
 
+const ejendom = useValgtEjendom()
 const { transactions, addTransaction } = useTransactions()
 
 const rows = ref([])
@@ -12,7 +14,7 @@ const importerer = ref(false)
 
 function erDuplikat(row) {
   return transactions.value.some(
-    (t) => t.dato === row.dato && Math.abs(t.belob - Math.abs(row.beloeb)) < 0.01,
+    (t) => t.ejendomId === ejendom.value && t.dato === row.dato && Math.abs(t.belob - Math.abs(row.beloeb)) < 0.01,
   )
 }
 
