@@ -1,5 +1,15 @@
 # Lejlighedsudlejning – regnskab
 
+[![CI](https://github.com/hisnamewasjaan/lejlighedsudlejning-regnskab/actions/workflows/ci.yml/badge.svg)](https://github.com/hisnamewasjaan/lejlighedsudlejning-regnskab/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/github/license/hisnamewasjaan/lejlighedsudlejning-regnskab)](./LICENSE)
+[![Vue 3](https://img.shields.io/badge/Vue-3-4FC08D?logo=vuedotjs&logoColor=white)](https://vuejs.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Dexie.js](https://img.shields.io/badge/IndexedDB-Dexie.js-FFC107)](https://dexie.org/)
+[![Tested with Vitest](https://img.shields.io/badge/unit%20tests-Vitest-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev/)
+[![E2E with Playwright](https://img.shields.io/badge/e2e-Playwright-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev/)
+[![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org/)
+
 En lokal, local-first webapp til bogføring og virksomhedsordning (VSO) for udlejning af en enkelt
 lejlighed i Danmark. Erstatter en stor del af det manuelle arbejde med årsregnskab, kapitalafkast,
 hæverækkefølge og selvangivelse for en udlejningsvirksomhed drevet under virksomhedsordningen.
