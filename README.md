@@ -55,6 +55,11 @@ npm run test:e2e   # e2e-tests (Playwright, starter selv en dev-server)
 npm run build
 ```
 
+## Udvikling
+
+Databaseskemaet migrerer automatisk mellem versioner – hver ny version skal om nødvendigt have sin
+egen upgrade-funktion; se kommentaren øverst i [`src/db/index.js`](./src/db/index.js) for hvordan.
+
 ## Data og privatliv
 
 Appen er local-first: alt regnskabsdata (bogføring, VSO-stamdata, lejeroplysninger) lever udelukkende i din egen browsers IndexedDB og forlader aldrig din maskine. Repoet kun kildekode, dokumentation af de skatteregler appen implementerer, og syntetiske eksempeltal i tests.

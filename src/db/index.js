@@ -1,5 +1,20 @@
 import Dexie from 'dexie'
 
+// Sådan virker schema-migrationer her: hver bruger har sin egen IndexedDB i browseren, med sit
+// eget indbyggede versionsnummer (et browser-koncept, ikke noget vi selv fører). Når appen
+// starter, sammenligner Dexie "hvilken version koden her erklærer" (den sidste db.version(N)
+// nedenfor) med "hvilken version denne browsers database faktisk er på", og kører automatisk kun
+// de .upgrade()-trin der mangler, i rækkefølge - fra hvor brugeren står og frem til den nyeste. En
+// helt ny installation springer det hele over og opretter databasen direkte i sin nyeste form.
+// Data slettes/genskabes aldrig - upgrade() patcher eksisterende rækker på plads.
+//
+// KRITISK REGEL: rediger aldrig et allerede udgivet db.version(N)-blok. Brugere der allerede har
+// kørt den, får den ikke kørt igen - kun helt nye .version(N+1)-blokke bliver set af dem. Skal
+// noget rettes i en tidligere version, tilføj en ny version i stedet.
+//
+// Denne mekanisme dækker kun den KØRENDE app mod sin egen browser-database - IKKE JSON-backups
+// (se db/backup.js). Import af en backup fra en ældre version fejler i dag uden migrering og uden
+// synlig fejlmeddelelse til brugeren (kendt, ikke rettet endnu - se BACKLOG.md).
 export const db = new Dexie('LejlighedsudlejningRegnskab')
 
 db.version(1).stores({
