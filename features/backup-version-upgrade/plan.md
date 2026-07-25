@@ -133,3 +133,7 @@ påvirkes ikke.
   `e2e/navigation.spec.js:218-227`.
 - Manuel røgtest i browseren som beskrevet i trin 8, som direkte reproducerer og verificerer fix på
   det scenarie, der oprindeligt blev fundet empirisk og noteret i `BACKLOG.md`.
+- Til sidst: verificér at den rigtige backup-fil, brugeren allerede har eksporteret (før denne
+  ændring), stadig kan importeres uden fejl. Den er på nuværende schemaversion (5), så den går den
+  hurtige, uændrede sti — men det bekræfter at omskrivningen af `importerBackup` ikke har
+  introduceret en regression for den mest almindelige, hverdagsagtige import-case.
