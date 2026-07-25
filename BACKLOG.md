@@ -83,3 +83,11 @@ prioriter, når der er tid til det.
       del mere at bygge og vedligeholde for noget der ikke bruges endnu.
 - [ ] **Regne på rentabilitet** af at købe en lejllighed og leje den ud. Prognose..
 - [ ] **Værktøj til at beregne tilbagebetaling/merbetaling** i forhold til betalt aconto til forbrug
+- [ ] **6 "high severity" sårbarheder fra `npm audit`** – alle med samme rodårsag: `brace-expansion`
+      (DoS ved ubegrænset expansion) trukket ind transitivt via
+      `minimatch → editorconfig → js-beautify → @vue/test-utils`. Kun i `devDependencies`
+      (test-værktøj, ikke en del af det byggede produktionsbundle), så reel risiko er lav – men bør
+      ryddes op. `npm audit fix --force` vil *nedgradere* `@vue/test-utils` fra 2.4.11 til 2.4.0
+      (breaking change) for at fjerne kæden, hvilket ikke bør gøres blindt. Afvent i stedet en
+      opdateret `@vue/test-utils`-release der selv har opdateret sin `js-beautify`-afhængighed, eller
+      undersøg om `js-beautify` kan overrides/pinnes direkte via `overrides` i `package.json`.
