@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import Dexie from 'dexie'
 import { exportDB } from 'dexie-export-import'
 import { nulstilDatabase } from './setup/testDb'
 
@@ -67,5 +68,54 @@ describe('importerBackup', () => {
     expect(properties[0].adresse).toBe('Original adresse')
     expect(tenants).toHaveLength(1)
     expect(tenants[0].navn).toBe('Original Lejer')
+  })
+
+  it('migrerer en ældre backup op til nuværende skemaversion via de eksisterende upgrade()-trin', async () => {
+    const midlertidigtNavn = `gammel-backup-test-${Date.now()}`
+    const gammel = new Dexie(midlertidigtNavn)
+    gammel.version(4).stores({
+      property: '++id, adresse, bfeNr',
+      tenants: '++id, navn, lejemaalStart, lejemaalSlut',
+      transactions: '++id, dato, type, kategori, belob, tenantId',
+      vsoSettings: '++id, aar, kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
+      recurringTransactions: '++id, type, kategori, hyppighed, startDato, slutDato, tenantId',
+    })
+    await gammel.open()
+    const ejendomId = await gammel.table('property').add({ adresse: 'Gammel adresse', bfeNr: '99999' })
+    await gammel.table('tenants').add({ navn: 'Gammel Lejer', lejemaalStart: '2020-01-01' })
+    const backupBlob = await exportDB(gammel)
+    gammel.close()
+    await Dexie.delete(midlertidigtNavn)
+
+    await importerBackup(backupBlob)
+
+    const tenants = await db.tenants.toArray()
+    expect(tenants).toHaveLength(1)
+    expect(tenants[0].navn).toBe('Gammel Lejer')
+    // Version 5-upgraden skal have tagget rækken med ejendomens id, selvom backuppen er fra før
+    // det felt fandtes.
+    expect(tenants[0].ejendomId).toBe(ejendomId)
+  })
+
+  it('afviser import af en backup fra en nyere version end nuværende, uden at røre eksisterende data', async () => {
+    await db.property.add({ adresse: 'Original adresse' })
+
+    const fremtidigJson = {
+      formatName: 'dexie',
+      formatVersion: 1,
+      data: {
+        databaseName: db.name,
+        databaseVersion: db.verno + 1,
+        tables: [],
+        data: [],
+      },
+    }
+    const fremtidigBlob = new Blob([JSON.stringify(fremtidigJson)], { type: 'application/json' })
+
+    await expect(importerBackup(fremtidigBlob)).rejects.toThrow(/nyere version/)
+
+    const properties = await db.property.toArray()
+    expect(properties).toHaveLength(1)
+    expect(properties[0].adresse).toBe('Original adresse')
   })
 })
