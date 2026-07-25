@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+concurrency:
+  group: deploy-lejlighedsudlejning
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    if: >
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build
+
+      - name: Set up SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Configure SSH
+        env:
+          KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat >> ~/.ssh/config <<'EOF'
+          Host linux13
+              HostName linux13.unoeuro.com
+              User hisnamewasjaan.dk
+              Ciphers aes192-ctr,aes128-ctr,aes256-ctr
+              MACs hmac-sha2-256,hmac-sha2-512,hmac-sha1
+          EOF
+
+      - name: Deploy
+        run: |
+          echo "Deploying dist/. -> linux13:lejlighedsudlejning/"
+          scp -r dist/. linux13:lejlighedsudlejning/
+          # ensure assets are readable on remote
+          ssh linux13 'chmod -R a+rX lejlighedsudlejning || true'
