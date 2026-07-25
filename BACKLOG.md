@@ -91,14 +91,9 @@ prioriter, når der er tid til det.
       (breaking change) for at fjerne kæden, hvilket ikke bør gøres blindt. Afvent i stedet en
       opdateret `@vue/test-utils`-release der selv har opdateret sin `js-beautify`-afhængighed, eller
       undersøg om `js-beautify` kan overrides/pinnes direkte via `overrides` i `package.json`.
-- [ ] **Backup-import understøtter ikke ældre schema-versioner** – testet empirisk (eksporterede en
-      backup på nuværende schema-version, simulerede en fremtidig version, forsøgte at importere):
-      `dexie-export-import` afviser importen helt med "Database version differs", og fejlen fanges
-      ikke nogen steder - `onImportBackup` i `StamdataView.vue` kalder blot
-      `await importerBackup(file); location.reload()`, så når importet fejler, sker der ingen
-      `reload()`, men brugeren får heller ingen fejlmeddelelse at se. Det ligner bare at "der ikke
-      sker noget". Fejlen er dog atomisk (intet importeres delvist, eksisterende data forbliver
-      urørt). Enhver backup eksporteret i dag bliver dermed ugendannelig, uden synlig fejl, næste
-      gang appens database-schema opdateres (`src/db/index.js`). Bør som minimum vise brugeren en
-      tydelig fejlmeddelelse ved mislykket import; en mere komplet løsning ville kræve reel
-      fremad-migrering af gamle backup-filer.
+- [x] ~~**Backup-import understøtter ikke ældre schema-versioner**~~ – løst i
+      `features/backup-version-upgrade/plan.md`: `importerBackup` (`src/db/backup.js`) migrerer nu
+      selv ældre backups op til nuværende skemaversion via en midlertidig database, der genbruger de
+      samme `.upgrade()`-trin som `src/db/index.js` (`definerSkema`). Backups fra en nyere version end
+      appen selv kører, afvises med en tydelig fejlmeddelelse i UI'et (`StamdataView.vue`) i stedet
+      for at fejle tavst.

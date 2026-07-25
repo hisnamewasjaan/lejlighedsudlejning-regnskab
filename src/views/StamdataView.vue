@@ -102,6 +102,8 @@ async function onAddTenant() {
   })
 }
 
+const importFejl = ref(null)
+
 async function onImportBackup(event) {
   const file = event.target.files?.[0]
   if (!file) return
@@ -109,8 +111,15 @@ async function onImportBackup(event) {
     event.target.value = ''
     return
   }
-  await importerBackup(file)
-  location.reload()
+  importFejl.value = null
+  try {
+    await importerBackup(file)
+    location.reload()
+  } catch (err) {
+    importFejl.value = err.message ?? 'Import af backup fejlede.'
+  } finally {
+    event.target.value = ''
+  }
 }
 </script>
 
@@ -306,6 +315,7 @@ async function onImportBackup(event) {
           <input type="file" accept="application/json" class="hidden" @change="onImportBackup" />
         </label>
       </div>
+      <p v-if="importFejl" class="mt-3 text-sm text-red-600">{{ importFejl }}</p>
     </section>
   </div>
 </template>
