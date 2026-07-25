@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { beregnManglendePerioder, genererPerioder } from '@/composables/useRecurringTransactions'
+import { nulstilDatabase, ventPaa } from './setup/testDb'
 
 const husleje = {
   type: 'indtaegt',
@@ -44,5 +45,48 @@ describe('beregnManglendePerioder', () => {
     expect(beregnManglendePerioder({ template: husleje, transactions, tilDato: '2026-01-01' })).toEqual([
       '2026-01-01',
     ])
+  })
+})
+
+describe('useRecurringTransactions', () => {
+  let db
+
+  beforeEach(async () => {
+    ;({ db } = await nulstilDatabase())
+  })
+
+  it('indlæser alle skabeloner', async () => {
+    await db.recurringTransactions.add({ ejendomId: 1, ...husleje })
+
+    const { useRecurringTransactions } = await import('@/composables/useRecurringTransactions')
+    const { templates, loading } = useRecurringTransactions()
+    await ventPaa(() => !loading.value)
+
+    expect(templates.value).toHaveLength(1)
+  })
+
+  it('tilføjer en skabelon med det aktive ejendomId og genindlæser', async () => {
+    localStorage.setItem('lejlighedsudlejning-valgt-ejendom', '3')
+
+    const { useRecurringTransactions } = await import('@/composables/useRecurringTransactions')
+    const { templates, loading, addTemplate } = useRecurringTransactions()
+    await ventPaa(() => !loading.value)
+
+    await addTemplate(husleje)
+
+    expect(templates.value).toHaveLength(1)
+    expect(templates.value[0]).toMatchObject({ ejendomId: 3, kategori: 'husleje' })
+  })
+
+  it('sletter en skabelon og genindlæser', async () => {
+    const id = await db.recurringTransactions.add({ ejendomId: 1, ...husleje })
+
+    const { useRecurringTransactions } = await import('@/composables/useRecurringTransactions')
+    const { templates, loading, deleteTemplate } = useRecurringTransactions()
+    await ventPaa(() => !loading.value)
+
+    await deleteTemplate(id)
+
+    expect(templates.value).toEqual([])
   })
 })

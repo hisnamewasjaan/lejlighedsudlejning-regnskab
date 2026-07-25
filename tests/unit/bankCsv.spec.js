@@ -33,6 +33,18 @@ describe('parseBankCsv', () => {
     const rows = parseBankCsv(eksempelCsv + '\n\n')
     expect(rows).toHaveLength(3)
   })
+
+  it('springer linjer over uden dato, selvom der er nok felter', () => {
+    const csv = eksempelCsv + ';Bolig;Fællesudgifter;Tomt;-100,00;1000,00;Udført;Nej;\n'
+    const rows = parseBankCsv(csv)
+    expect(rows).toHaveLength(3)
+  })
+
+  it('sætter note til tom streng når 9. felt slet ikke findes i linjen', () => {
+    const csvUdenNoteKolonne = `Dato;Kategori;Underkategori;Tekst;Beløb;Saldo;Status;Afstemt\n02.01.2025;Bolig;Fællesudgifter;E/F Test;-4.505,00;85.431,05;Udført;Nej`
+    const rows = parseBankCsv(csvUdenNoteKolonne)
+    expect(rows[0].note).toBe('')
+  })
 })
 
 describe('foreslaaKategori', () => {
@@ -68,6 +80,11 @@ describe('foreslaaKategori', () => {
     expect(foreslaaKategori(row)).toEqual({ type: 'indtaegt', kategori: 'renteindtaegt' })
   })
 
+  it('genkender negativ rente (fx morarenter man selv betaler) som en udgift, ikke en indtægt', () => {
+    const row = { kategori: 'Renter', underkategori: '', tekst: 'Rente', beloeb: -12.5 }
+    expect(foreslaaKategori(row)).toEqual({ type: 'udgift', kategori: 'anden_udgift' })
+  })
+
   it('genkender en hævning ud fra "privat" i noten, uanset kategori', () => {
     const row = { kategori: 'Øvrige udgifter', underkategori: 'Overførsler', tekst: 'Donor', beloeb: -40000, note: 'privat brug' }
     expect(foreslaaKategori(row)).toEqual({ type: 'haevning' })
@@ -76,6 +93,11 @@ describe('foreslaaKategori', () => {
   it('falder tilbage til fortegns-baseret gæt når intet nøgleord matcher', () => {
     const row = { kategori: 'Ukendt', underkategori: 'Ukendt', tekst: 'Et eller andet', beloeb: -500 }
     expect(foreslaaKategori(row)).toEqual({ type: 'udgift', kategori: 'anden_udgift' })
+  })
+
+  it('falder tilbage til anden_indtaegt for et positivt, umatchet beløb', () => {
+    const row = { kategori: 'Ukendt', underkategori: 'Ukendt', tekst: 'Et eller andet', beloeb: 500 }
+    expect(foreslaaKategori(row)).toEqual({ type: 'indtaegt', kategori: 'anden_indtaegt' })
   })
 })
 

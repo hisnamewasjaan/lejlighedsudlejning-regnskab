@@ -47,4 +47,22 @@ describe('beregnHuslejestatus', () => {
     const fremtidigLejer = { ...tenant, lejemaalStart: '2027-01-01' }
     expect(beregnHuslejestatus({ tenant: fremtidigLejer, transactions: [], aar: 2026, tilOgMedMaaned: 12 })).toEqual([])
   })
+
+  it('returnerer tom liste hvis der ikke er nogen lejer', () => {
+    expect(beregnHuslejestatus({ tenant: null, transactions: [], aar: 2026, tilOgMedMaaned: 12 })).toEqual([])
+  })
+
+  it('stopper ved fraflytningsmåneden hvis lejemålet slutter midt i regnskabsåret', () => {
+    const fraflyttet = { ...tenant, lejemaalSlut: '2026-03-15' }
+    const status = beregnHuslejestatus({ tenant: fraflyttet, transactions: [], aar: 2026, tilOgMedMaaned: 12 })
+
+    expect(status.map((s) => s.maaned)).toEqual([1, 2, 3])
+  })
+
+  it('bruger 0 som forventet husleje hvis lejeren ikke har en fast månedlig husleje sat', () => {
+    const { maanedligHusleje, ...uden } = tenant
+    const status = beregnHuslejestatus({ tenant: uden, transactions: [], aar: 2026, tilOgMedMaaned: 1 })
+
+    expect(status[0]).toMatchObject({ forventet: 0, status: 'betalt' })
+  })
 })
