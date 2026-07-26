@@ -1,12 +1,10 @@
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { INDTAEGT_KATEGORIER, UDGIFT_KATEGORIER, useTransactions } from '@/composables/useTransactions'
-import {
-  HYPPIGHED_LABELS,
-  beregnManglendePerioder,
-  useRecurringTransactions,
-} from '@/composables/useRecurringTransactions'
+import { beregnManglendePerioder, useRecurringTransactions } from '@/composables/useRecurringTransactions'
 import CsvImport from '@/components/CsvImport.vue'
+import BogforingFasteTemplates from '@/components/BogforingFasteTemplates.vue'
+import BogforingPosteringer from '@/components/BogforingPosteringer.vue'
 import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import { formatTal } from '@/utils/format'
 
@@ -93,9 +91,6 @@ function onTypeChange() {
   form.kategori = kategoriMuligheder.value[0]?.value ?? ''
 }
 
-const TYPE_LABELS = { indtaegt: 'Indtægt', udgift: 'Udgift', haevning: 'Hævning (privat)' }
-const TYPE_KLASSER = { indtaegt: 'text-emerald-700', udgift: 'text-red-700', haevning: 'text-amber-700' }
-
 const saved = ref(false)
 
 async function onSubmit() {
@@ -158,35 +153,12 @@ const aaretsHaevninger = computed(() =>
         mangler at blive registreret.
       </p>
 
-      <ul v-if="ejendomsTemplates.length" class="mt-4 divide-y divide-slate-200">
-        <li v-for="entry in manglendePrTemplate" :key="entry.template.id" class="py-3 text-sm">
-          <div class="flex items-center justify-between">
-            <div>
-              <p class="font-medium">
-                {{ kategoriLabels[entry.template.kategori] }} · {{ formatTal(entry.template.belob) }} kr. ·
-                {{ HYPPIGHED_LABELS[entry.template.hyppighed] }}
-              </p>
-              <p class="text-slate-500">
-                <span v-if="entry.manglende.length === 0">Alle perioder er registreret.</span>
-                <span v-else>{{ entry.manglende.length }} manglende periode(r): {{ entry.manglende.join(', ') }}</span>
-              </p>
-            </div>
-            <div class="flex items-center gap-3">
-              <button
-                v-if="entry.manglende.length"
-                class="rounded bg-slate-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-slate-700"
-                @click="opretManglende(entry)"
-              >
-                Opret {{ entry.manglende.length }} manglende
-              </button>
-              <button class="text-red-600 hover:text-red-800" @click="deleteTemplate(entry.template.id)">
-                Slet skabelon
-              </button>
-            </div>
-          </div>
-        </li>
-      </ul>
-      <p v-else class="mt-4 text-sm text-slate-500">Ingen faste posteringer oprettet endnu.</p>
+      <BogforingFasteTemplates
+        :entries="manglendePrTemplate"
+        :kategori-labels="kategoriLabels"
+        @opret-manglende="opretManglende"
+        @slet-template="deleteTemplate"
+      />
 
       <form class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2" @submit.prevent="onAddTemplate">
         <label class="flex flex-col gap-1 text-sm">
@@ -280,33 +252,11 @@ const aaretsHaevninger = computed(() =>
 
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">Posteringer</h2>
-      <table v-if="ejendomsTransaktioner.length" class="mt-4 w-full text-left text-sm">
-        <thead class="text-slate-500">
-          <tr>
-            <th class="pb-2">Dato</th>
-            <th class="pb-2">Type</th>
-            <th class="pb-2">Kategori</th>
-            <th class="pb-2">Note</th>
-            <th class="pb-2 text-right">Beløb</th>
-            <th class="pb-2"></th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-200">
-          <tr v-for="t in ejendomsTransaktioner" :key="t.id">
-            <td class="py-2">{{ t.dato }}</td>
-            <td class="py-2">
-              <span :class="TYPE_KLASSER[t.type]">{{ TYPE_LABELS[t.type] }}</span>
-            </td>
-            <td class="py-2">{{ kategoriLabels[t.kategori] ?? '–' }}</td>
-            <td class="py-2 text-slate-500">{{ t.note }}</td>
-            <td class="py-2 text-right">{{ formatTal(t.belob) }} kr.</td>
-            <td class="py-2 text-right">
-              <button class="text-red-600 hover:text-red-800" @click="deleteTransaction(t.id)">Slet</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <p v-else class="mt-4 text-sm text-slate-500">Ingen posteringer endnu.</p>
+      <BogforingPosteringer
+        :transaktioner="ejendomsTransaktioner"
+        :kategori-labels="kategoriLabels"
+        @slet="deleteTransaction"
+      />
     </section>
   </div>
 </template>
