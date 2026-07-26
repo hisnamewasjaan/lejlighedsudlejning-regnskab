@@ -111,3 +111,17 @@ export function foreslaaKategori(row) {
   const type = row.beloeb >= 0 ? 'indtaegt' : 'udgift'
   return { type, kategori: type === 'indtaegt' ? 'anden_indtaegt' : 'anden_udgift' }
 }
+
+/**
+ * Gætter om en parset bank-linje sandsynligvis allerede findes som en bogført postering - samme
+ * ejendom, samme dato, og beløb der matcher inden for en øres afrundingsmargin (banken og appen kan
+ * afrunde en anelse forskelligt). Bruges til at foreslå fravalg af dubletter i importforhåndsvisningen.
+ * @param {{ dato: string, beloeb: number }} row
+ * @param {Array<{ ejendomId: number, dato: string, belob: number }>} eksisterendeTransaktioner
+ * @param {number|null} ejendomId
+ */
+export function erDuplikatTransaktion(row, eksisterendeTransaktioner, ejendomId) {
+  return eksisterendeTransaktioner.some(
+    (t) => t.ejendomId === ejendomId && t.dato === row.dato && Math.abs(t.belob - Math.abs(row.beloeb)) < 0.01,
+  )
+}

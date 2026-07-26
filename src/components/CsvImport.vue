@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { decodeCsvBuffer, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
+import { decodeCsvBuffer, erDuplikatTransaktion, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
 import { useTransactions } from '@/composables/useTransactions'
 import { useValgtEjendom } from '@/composables/useValgtEjendom'
 import CsvImportPreviewTabel from '@/components/CsvImportPreviewTabel.vue'
@@ -12,12 +12,6 @@ const rows = ref([])
 const filnavn = ref('')
 const importeret = ref(0)
 const importerer = ref(false)
-
-function erDuplikat(row) {
-  return transactions.value.some(
-    (t) => t.ejendomId === ejendom.value && t.dato === row.dato && Math.abs(t.belob - Math.abs(row.beloeb)) < 0.01,
-  )
-}
 
 async function onFileChange(event) {
   const file = event.target.files?.[0]
@@ -31,7 +25,7 @@ async function onFileChange(event) {
   const parsedeRows = parseBankCsv(tekst)
 
   rows.value = parsedeRows.map((row, i) => {
-    const duplikat = erDuplikat(row)
+    const duplikat = erDuplikatTransaktion(row, transactions.value, ejendom.value)
     const forslag = foreslaaKategori(row)
     return {
       ...row,

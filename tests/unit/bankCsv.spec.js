@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { decodeCsvBuffer, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
+import { decodeCsvBuffer, erDuplikatTransaktion, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
 
 const eksempelCsv = `Dato;Kategori;Underkategori;Tekst;Beløb;Saldo;Status;Afstemt;
 02.01.2025;Bolig;Fællesudgifter;E/F Test;-4.505,00;85.431,05;Udført;Nej;
@@ -117,5 +117,29 @@ describe('decodeCsvBuffer', () => {
     // "Test æøå" som Windows-1252/Latin-1-bytes: æ=0xE6, ø=0xF8, å=0xE5
     const bytes = new Uint8Array([0x54, 0x65, 0x73, 0x74, 0x20, 0xe6, 0xf8, 0xe5])
     expect(decodeCsvBuffer(bytes.buffer)).toBe('Test æøå')
+  })
+})
+
+describe('erDuplikatTransaktion', () => {
+  const eksisterende = [{ ejendomId: 1, dato: '2025-01-02', belob: 4505 }]
+
+  it('finder en dublet med samme ejendom, dato og beløb (uanset fortegn)', () => {
+    expect(erDuplikatTransaktion({ dato: '2025-01-02', beloeb: -4505 }, eksisterende, 1)).toBe(true)
+  })
+
+  it('accepterer en øres afrundingsforskel i beløbet', () => {
+    expect(erDuplikatTransaktion({ dato: '2025-01-02', beloeb: -4505.005 }, eksisterende, 1)).toBe(true)
+  })
+
+  it('finder ikke en dublet hvis ejendommen er en anden', () => {
+    expect(erDuplikatTransaktion({ dato: '2025-01-02', beloeb: -4505 }, eksisterende, 2)).toBe(false)
+  })
+
+  it('finder ikke en dublet hvis datoen er en anden', () => {
+    expect(erDuplikatTransaktion({ dato: '2025-01-03', beloeb: -4505 }, eksisterende, 1)).toBe(false)
+  })
+
+  it('finder ikke en dublet hvis beløbet er for forskelligt', () => {
+    expect(erDuplikatTransaktion({ dato: '2025-01-02', beloeb: -4506 }, eksisterende, 1)).toBe(false)
   })
 })
