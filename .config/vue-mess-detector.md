@@ -38,7 +38,20 @@ er løst ved at splitte filen op efter side/feature (`stamdata.spec.js`, `bogfor
 ejendoms-opsætning udtrukket til `e2e/helpers.js` (`opretTestEjendom`). Ingen testlogik ændret, kun
 flyttet. Alle 7 filer lander under 100 linjer; fundet er derfor helt væk, ikke undertrykt.
 
+**2026-07-26, opfølgning 2**: `definerSkema`s "cyclomatic complexity is very high (12)"-fund i
+`src/db/index.js` er løst ved at flytte de 3 `.upgrade()`-callbacks (`migrerBfeNummer`,
+`migrerRealkreditgaeldTilVsoSettings`, `migrerEjendomId`) til en ny fil, `src/db/migrations.js`,
+importeret af `index.js`. Version-blokkenes `.stores()`/`.upgrade()`-kobling og rækkefølge er
+100% uændret - kun hvor hver callback-krop er erklæret. Vigtig lærdom om værktøjet undervejs:
+`cyclomaticComplexity`-reglen er **ikke** per-funktion-scoped - den tæller simpelthen
+`if`/`else`/`for`/`while`/`case`-forekomster i hele filens indhold. At omorganisere kode _inden for_
+samme fil (som først forsøgt) ændrer derfor intet ved tallet; kun en flytning til en anden fil
+reelt splitter optællingen. Dette afslørede desuden 3 ubracede one-liner-if'er, der ikke var fanget
+af `ifWithoutCurlyBraces` før (formodentlig for dybt nestet til værktøjets parser før flytningen) -
+rettet med samme mønster som den oprindelige mekaniske oprydning.
+
 Bevidst **fortsat ikke** undertrykt (uden for denne refaktorerings scope):
-kompleksitet/funktionsstørrelse på `definerSkema` i `src/db/index.js` (bevidst append-only
-migrations-mønster, jf. CLAUDE.md) og funktionsstørrelse på `useVsoSettings`-komposablens
-setup-funktion (samme årsag som ovenfor, men efterladt synlig som dokumentation af mønsteret).
+funktionsstørrelse på `definerSkema` i `src/db/index.js` (73 linjer efter migrations-udtrækningen,
+stadig over grænsen, men et iboende træk ved et versioneret append-only skema, jf. CLAUDE.md - vokser
+med antallet af versioner, ikke noget der kan "rettes" uden at ændre selve mønsteret) og
+funktionsstørrelse på `useVsoSettings`-komposablens setup-funktion (samme årsag som ovenfor).

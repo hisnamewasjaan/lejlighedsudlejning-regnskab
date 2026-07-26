@@ -1,4 +1,5 @@
 import Dexie from 'dexie'
+import { migrerBfeNummer, migrerRealkreditgaeldTilVsoSettings, migrerEjendomId } from './migrations'
 
 // Sådan virker schema-migrationer her: hver bruger har sin egen IndexedDB i browseren, med sit
 // eget indbyggede versionsnummer (et browser-koncept, ikke noget vi selv fører). Når appen
@@ -63,15 +64,7 @@ export function definerSkema(dexieInstance, tilVersion = NYESTE_VERSION) {
         vsoSettings: '++id, aar, kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
         recurringTransactions: '++id, type, kategori, hyppighed, startDato, slutDato, tenantId',
       })
-      .upgrade(async (tx) => {
-        await tx
-          .table('property')
-          .toCollection()
-          .modify((p) => {
-            p.bfeNr = p.bbrNr
-            delete p.bbrNr
-          })
-      })
+      .upgrade(migrerBfeNummer)
   }
 
   // Realkreditgæld ændrer sig hvert år (lånet afdrages løbende), og VSL § 8 kræver at
@@ -90,26 +83,7 @@ export function definerSkema(dexieInstance, tilVersion = NYESTE_VERSION) {
         vsoSettings: '++id, aar, kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
         recurringTransactions: '++id, type, kategori, hyppighed, startDato, slutDato, tenantId',
       })
-      .upgrade(async (tx) => {
-        const ejendomme = await tx.table('property').toArray()
-        const eksisterendeGaeld = ejendomme[0]?.realkreditgaeld
-
-        if (eksisterendeGaeld != null) {
-          await tx
-            .table('vsoSettings')
-            .toCollection()
-            .modify((s) => {
-              if (s.realkreditgaeld == null) s.realkreditgaeld = eksisterendeGaeld
-            })
-        }
-
-        await tx
-          .table('property')
-          .toCollection()
-          .modify((p) => {
-            delete p.realkreditgaeld
-          })
-      })
+      .upgrade(migrerRealkreditgaeldTilVsoSettings)
   }
 
   // Understøtter flere udlejningsejendomme man kan skifte imellem, i stedet for at appen implicit
@@ -129,20 +103,7 @@ export function definerSkema(dexieInstance, tilVersion = NYESTE_VERSION) {
           '++id, ejendomId, aar, [ejendomId+aar], kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
         recurringTransactions: '++id, ejendomId, type, kategori, hyppighed, startDato, slutDato, tenantId',
       })
-      .upgrade(async (tx) => {
-        const ejendomme = await tx.table('property').toArray()
-        const foersteEjendomId = ejendomme[0]?.id
-        if (foersteEjendomId == null) return
-
-        for (const tabel of ['tenants', 'transactions', 'recurringTransactions', 'vsoSettings']) {
-          await tx
-            .table(tabel)
-            .toCollection()
-            .modify((r) => {
-              if (r.ejendomId == null) r.ejendomId = foersteEjendomId
-            })
-        }
-      })
+      .upgrade(migrerEjendomId)
   }
 }
 
