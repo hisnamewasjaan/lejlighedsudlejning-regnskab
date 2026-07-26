@@ -45,6 +45,7 @@ export function useVsoTransaktionsopsummering(transactions, ejendom, aar) {
   )
 
   return {
+    aaretsTransaktioner,
     aaretsDriftIndtaegter,
     aaretsRenteindtaegt,
     aaretsDriftUdgifter,

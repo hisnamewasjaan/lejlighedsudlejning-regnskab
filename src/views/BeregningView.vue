@@ -4,6 +4,7 @@ import BeregningTrin from '@/components/BeregningTrin.vue'
 import { useProperty } from '@/composables/useProperty'
 import { useTransactions } from '@/composables/useTransactions'
 import { useVsoSettings } from '@/composables/useVsoSettings'
+import { useVsoTransaktionsopsummering } from '@/composables/useVsoTransaktionsopsummering'
 import {
   beregnAaretsOverskud,
   beregnKapitalafkast,
@@ -22,35 +23,13 @@ const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
 const { settings } = useVsoSettings(ejendom, aar)
 
-const aaretsTransaktioner = computed(() =>
-  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
-)
+const {
+  aaretsDriftIndtaegter: indtaegterIAlt,
+  aaretsDriftUdgifter: udgifterIAlt,
+  aaretsDriftsresultat: driftsresultat,
+  aaretsRenteindtaegt: renteindtaegterIAlt,
+} = useVsoTransaktionsopsummering(transactions, ejendom, aar)
 
-// Depositum ind/ud er hverken indtægt eller udgift, men en gæld til lejeren, og holdes derfor helt
-// uden for driftsresultatet (samme princip som "skyldigt depositum" i kapitalafkastgrundlaget).
-const indtaegterIAlt = computed(() =>
-  aaretsTransaktioner.value
-    .filter((t) => t.type === 'indtaegt' && t.kategori !== 'renteindtaegt' && t.kategori !== 'depositum')
-    .reduce((sum, t) => sum + t.belob, 0),
-)
-const udgifterIAlt = computed(() =>
-  aaretsTransaktioner.value
-    .filter(
-      (t) =>
-        t.type === 'udgift' &&
-        t.kategori !== 'realkreditrenter' &&
-        t.kategori !== 'realkreditbidrag' &&
-        t.kategori !== 'depositum_tilbagebetaling',
-    )
-    .reduce((sum, t) => sum + t.belob, 0),
-)
-const driftsresultat = computed(() => indtaegterIAlt.value - udgifterIAlt.value)
-
-const renteindtaegterIAlt = computed(() =>
-  aaretsTransaktioner.value
-    .filter((t) => t.type === 'indtaegt' && t.kategori === 'renteindtaegt')
-    .reduce((sum, t) => sum + t.belob, 0),
-)
 const renteudgifterIAlt = computed(() => settings.value?.realkreditrenterOgBidrag ?? 0)
 const afskrivninger = computed(() => settings.value?.afskrivninger ?? 0)
 

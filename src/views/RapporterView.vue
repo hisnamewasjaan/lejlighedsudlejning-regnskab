@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import { useProperty } from '@/composables/useProperty'
 import { useTransactions, INDTAEGT_KATEGORIER, UDGIFT_KATEGORIER } from '@/composables/useTransactions'
 import { useVsoSettings } from '@/composables/useVsoSettings'
+import { useVsoTransaktionsopsummering } from '@/composables/useVsoTransaktionsopsummering'
 import { beregnAaretsOverskud, beregnKapitalafkast, beregnKapitalafkastgrundlag } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
 import { useValgtAar } from '@/composables/useValgtAar'
@@ -16,9 +17,13 @@ const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
 const { settings } = useVsoSettings(ejendom, aar)
 
-const aaretsTransaktioner = computed(() =>
-  transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
-)
+const {
+  aaretsTransaktioner,
+  aaretsDriftIndtaegter: indtaegterIAlt,
+  aaretsDriftUdgifter: udgifterIAlt,
+  aaretsDriftsresultat: driftsresultat,
+  aaretsRenteindtaegt: renteindtaegterIAlt,
+} = useVsoTransaktionsopsummering(transactions, ejendom, aar)
 
 function summerPrKategori(type, kategorier) {
   return kategorier.map((k) => ({
@@ -47,15 +52,6 @@ const indtaegtsLinjer = computed(() =>
 )
 const udgiftsLinjer = computed(() => summerPrKategori('udgift', DRIFT_UDGIFT_KATEGORIER).filter((l) => l.belob !== 0))
 
-const indtaegterIAlt = computed(() => indtaegtsLinjer.value.reduce((sum, l) => sum + l.belob, 0))
-const udgifterIAlt = computed(() => udgiftsLinjer.value.reduce((sum, l) => sum + l.belob, 0))
-const driftsresultat = computed(() => indtaegterIAlt.value - udgifterIAlt.value)
-
-const renteindtaegterIAlt = computed(() =>
-  aaretsTransaktioner.value
-    .filter((t) => t.type === 'indtaegt' && t.kategori === 'renteindtaegt')
-    .reduce((sum, t) => sum + t.belob, 0),
-)
 // Indtastes samlet på VSO-siden (ét årligt tal fra realkreditinstituttets opgørelse) frem for at
 // blive afledt af enkelte bogføringsposter - se SKATTEREGLER.md punkt 9.
 const renteudgifterIAlt = computed(() => settings.value?.realkreditrenterOgBidrag ?? 0)
