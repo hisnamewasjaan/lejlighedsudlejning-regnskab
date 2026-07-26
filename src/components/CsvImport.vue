@@ -1,8 +1,9 @@
 <script setup>
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { decodeCsvBuffer, foreslaaKategori, parseBankCsv } from '@/utils/bankCsv'
-import { INDTAEGT_KATEGORIER, UDGIFT_KATEGORIER, useTransactions } from '@/composables/useTransactions'
+import { useTransactions } from '@/composables/useTransactions'
 import { useValgtEjendom } from '@/composables/useValgtEjendom'
+import CsvImportPreviewTabel from '@/components/CsvImportPreviewTabel.vue'
 
 const ejendom = useValgtEjendom()
 const { transactions, addTransaction } = useTransactions()
@@ -44,24 +45,6 @@ async function onFileChange(event) {
     }
   })
 }
-
-function kategoriMuligheder(type) {
-  if (type === 'indtaegt') {
-    return INDTAEGT_KATEGORIER
-  }
-  if (type === 'udgift') {
-    return UDGIFT_KATEGORIER
-  }
-  return []
-}
-
-function onTypeChange(row) {
-  const muligheder = kategoriMuligheder(row.type)
-  row.kategori = muligheder[0]?.value ?? ''
-  row.advarsel = undefined
-}
-
-const antalValgt = computed(() => rows.value.filter((r) => r.medtag).length)
 
 async function onImporter() {
   importerer.value = true
@@ -105,64 +88,6 @@ async function onImporter() {
 
     <p v-if="importeret > 0" class="mt-4 text-sm text-emerald-600">{{ importeret }} postering(er) importeret.</p>
 
-    <div v-if="rows.length" class="mt-4 overflow-x-auto">
-      <table class="w-full min-w-[640px] text-left text-sm">
-        <thead class="text-slate-500">
-          <tr>
-            <th class="pb-2"></th>
-            <th class="pb-2">Dato</th>
-            <th class="pb-2">Tekst</th>
-            <th class="pb-2 text-right">Beløb</th>
-            <th class="pb-2">Type</th>
-            <th class="pb-2">Kategori</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-slate-100">
-          <tr v-for="(row, i) in rows" :key="i" :class="row.duplikat ? 'opacity-50' : ''">
-            <td class="py-2"><input v-model="row.medtag" type="checkbox" /></td>
-            <td class="py-2 whitespace-nowrap">{{ row.dato }}</td>
-            <td class="py-2">
-              {{ row.tekst }}
-              <span v-if="row.duplikat" class="block text-xs text-amber-600">Findes muligvis allerede</span>
-            </td>
-            <td class="py-2 text-right whitespace-nowrap">
-              <input
-                v-model.number="row.beloeb"
-                type="number"
-                step="0.01"
-                class="w-28 rounded border border-slate-300 px-2 py-1 text-right"
-              />
-            </td>
-            <td class="py-2">
-              <select v-model="row.type" class="rounded border border-slate-300 px-2 py-1" @change="onTypeChange(row)">
-                <option value="indtaegt">Indtægt</option>
-                <option value="udgift">Udgift</option>
-                <option value="haevning">Hævning (privat)</option>
-              </select>
-            </td>
-            <td class="py-2">
-              <select
-                v-if="kategoriMuligheder(row.type).length"
-                v-model="row.kategori"
-                class="rounded border border-slate-300 px-2 py-1"
-                @change="row.advarsel = undefined"
-              >
-                <option v-for="k in kategoriMuligheder(row.type)" :key="k.value" :value="k.value">{{ k.label }}</option>
-              </select>
-              <span v-else class="text-slate-400">–</span>
-              <span v-if="row.advarsel" class="mt-1 block max-w-xs text-xs text-amber-600">{{ row.advarsel }}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <button
-        class="mt-4 rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
-        :disabled="antalValgt === 0 || importerer"
-        @click="onImporter"
-      >
-        Importér {{ antalValgt }} postering(er)
-      </button>
-    </div>
+    <CsvImportPreviewTabel v-if="rows.length" v-model:rows="rows" :importerer="importerer" @import="onImporter" />
   </section>
 </template>
