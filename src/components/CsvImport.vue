@@ -84,10 +84,9 @@ async function onImporter() {
   <section class="rounded-lg border border-slate-200 bg-white p-6">
     <h2 class="text-lg font-medium">Importér fra netbank</h2>
     <p class="mt-1 text-sm text-slate-500">
-      Upload en CSV-fil fra netbanken som alternativ til at indtaste posteringer manuelt. Gennemgå
-      forslagene til type/kategori for hver linje, ret beløbet hvis nødvendigt, og fjern
-      afkrydsningen for linjer der ikke skal importeres (fx dubletter eller linjer der kræver en
-      korrektion, du endnu ikke kender).
+      Upload en CSV-fil fra netbanken som alternativ til at indtaste posteringer manuelt. Gennemgå forslagene til
+      type/kategori for hver linje, ret beløbet hvis nødvendigt, og fjern afkrydsningen for linjer der ikke skal
+      importeres (fx dubletter eller linjer der kræver en korrektion, du endnu ikke kender).
     </p>
 
     <label class="mt-4 inline-block rounded border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-50">

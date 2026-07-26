@@ -125,7 +125,8 @@ export function definerSkema(dexieInstance, tilVersion = NYESTE_VERSION) {
         property: '++id, adresse, bfeNr',
         tenants: '++id, ejendomId, navn, lejemaalStart, lejemaalSlut',
         transactions: '++id, ejendomId, dato, type, kategori, belob, tenantId',
-        vsoSettings: '++id, ejendomId, aar, [ejendomId+aar], kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
+        vsoSettings:
+          '++id, ejendomId, aar, [ejendomId+aar], kapitalafkastsats, rentekorrektionssats, indskudskonto, opsparetOverskud',
         recurringTransactions: '++id, ejendomId, type, kategori, hyppighed, startDato, slutDato, tenantId',
       })
       .upgrade(async (tx) => {

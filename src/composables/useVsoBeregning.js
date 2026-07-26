@@ -19,9 +19,7 @@ export function beregnKapitalafkastgrundlag({
   skyldigtDepositum = 0,
   hensatTilSenereHaevning = 0,
 }) {
-  return (
-    fastEjendomAnskaffelsessum + banksaldo - realkreditgaeld - skyldigtDepositum - hensatTilSenereHaevning
-  )
+  return fastEjendomAnskaffelsessum + banksaldo - realkreditgaeld - skyldigtDepositum - hensatTilSenereHaevning
 }
 
 /**

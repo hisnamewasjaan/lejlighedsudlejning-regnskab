@@ -122,7 +122,12 @@ const trin = computed(() => [
     titel: 'Kapitalafkast',
     paragraf: 'VSL § 7',
     inputs: [
-      { label: 'Kapitalafkastgrundlag', vaerdi: kapitalafkastgrundlag.value, fortegn: '', kilde: 'kapitalafkastgrundlag' },
+      {
+        label: 'Kapitalafkastgrundlag',
+        vaerdi: kapitalafkastgrundlag.value,
+        fortegn: '',
+        kilde: 'kapitalafkastgrundlag',
+      },
       { label: 'Kapitalafkastsats', vaerdi: kapitalafkastsats.value, fortegn: '×', erProcent: true },
     ],
     resultat: { label: 'Kapitalafkast', vaerdi: kapitalafkast.value, rubrik: RUBRIK.kapitalafkast },
@@ -132,13 +137,39 @@ const trin = computed(() => [
     titel: 'Årets overskud',
     paragraf: 'VSL § 10',
     inputs: [
-      { label: 'Driftsresultat', vaerdi: driftsresultat.value, fortegn: '', rubrik: RUBRIK.overskudVirksomhed, kilde: 'driftsresultat' },
-      { label: 'Renteindtægt i virksomhed', vaerdi: renteindtaegterIAlt.value, fortegn: '+', rubrik: RUBRIK.renteindtaegtVirksomhed },
-      { label: 'Renteudgift og -bidrag i virksomhed', vaerdi: renteudgifterIAlt.value, fortegn: '−', rubrik: RUBRIK.renteudgiftVirksomhed },
+      {
+        label: 'Driftsresultat',
+        vaerdi: driftsresultat.value,
+        fortegn: '',
+        rubrik: RUBRIK.overskudVirksomhed,
+        kilde: 'driftsresultat',
+      },
+      {
+        label: 'Renteindtægt i virksomhed',
+        vaerdi: renteindtaegterIAlt.value,
+        fortegn: '+',
+        rubrik: RUBRIK.renteindtaegtVirksomhed,
+      },
+      {
+        label: 'Renteudgift og -bidrag i virksomhed',
+        vaerdi: renteudgifterIAlt.value,
+        fortegn: '−',
+        rubrik: RUBRIK.renteudgiftVirksomhed,
+      },
       { label: 'Afskrivninger', vaerdi: afskrivninger.value, fortegn: '−' },
-      { label: 'Kapitalafkast', vaerdi: kapitalafkast.value, fortegn: '−', rubrik: RUBRIK.kapitalafkast, kilde: 'kapitalafkast' },
+      {
+        label: 'Kapitalafkast',
+        vaerdi: kapitalafkast.value,
+        fortegn: '−',
+        rubrik: RUBRIK.kapitalafkast,
+        kilde: 'kapitalafkast',
+      },
     ],
-    resultat: { label: 'Årets overskud', vaerdi: aaretsOverskud.value, rubrik: RUBRIK.indkomstTilVirksomhedsbeskatning },
+    resultat: {
+      label: 'Årets overskud',
+      vaerdi: aaretsOverskud.value,
+      rubrik: RUBRIK.indkomstTilVirksomhedsbeskatning,
+    },
   },
 ])
 </script>
@@ -153,9 +184,9 @@ const trin = computed(() => [
       </label>
     </div>
     <p class="text-sm text-slate-500">
-      Samme tal som på VSO- og Rapport-siden, men vist som en sammenhængende kæde af mellemregninger -
-      fra det bogførte til de endelige rubriktal for {{ aar }}. Hævningsberegneren (simulering af en
-      konkret hævning) findes stadig på VSO-siden.
+      Samme tal som på VSO- og Rapport-siden, men vist som en sammenhængende kæde af mellemregninger - fra det bogførte
+      til de endelige rubriktal for {{ aar }}. Hævningsberegneren (simulering af en konkret hævning) findes stadig på
+      VSO-siden.
     </p>
 
     <section
@@ -189,14 +220,24 @@ const trin = computed(() => [
                 'text-red-600': input.fortegn === '−',
                 'text-slate-500': input.fortegn === '×',
               }"
-            >{{ input.fortegn }}</span>
+              >{{ input.fortegn }}</span
+            >
             {{ input.erProcent ? `${input.vaerdi * 100}%` : kr(input.vaerdi) }}
           </p>
         </component>
       </div>
 
       <div class="flex justify-center py-2 text-slate-300">
-        <svg width="16" height="22" viewBox="0 0 16 22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg
+          width="16"
+          height="22"
+          viewBox="0 0 16 22"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
           <path d="M8 0 V16 M2 13 L8 19 L14 13" />
         </svg>
       </div>
@@ -206,14 +247,17 @@ const trin = computed(() => [
         :class="KLEUR[t.id] ? [KLEUR[t.id].borderLeft, 'border-l-4'] : ''"
       >
         <p class="text-xs font-medium text-slate-600">
-          = {{ t.resultat.label }} <span v-if="t.resultat.rubrik" class="font-normal text-slate-400">(rubrik {{ t.resultat.rubrik }})</span>
+          = {{ t.resultat.label }}
+          <span v-if="t.resultat.rubrik" class="font-normal text-slate-400">(rubrik {{ t.resultat.rubrik }})</span>
         </p>
         <p class="text-lg font-semibold">{{ kr(t.resultat.vaerdi) }}</p>
       </div>
     </section>
 
     <section class="rounded-lg border border-slate-200 bg-white p-6">
-      <h2 class="text-sm font-medium text-slate-700">Hæves eller opspares? <span class="font-normal text-slate-400">(VSL § 10)</span></h2>
+      <h2 class="text-sm font-medium text-slate-700">
+        Hæves eller opspares? <span class="font-normal text-slate-400">(VSL § 10)</span>
+      </h2>
 
       <div class="mt-4 flex flex-wrap justify-center gap-4">
         <a
@@ -222,7 +266,9 @@ const trin = computed(() => [
           :class="[
             KLEUR.aaretsOverskud.borderLeft,
             'border-l-4',
-            opsparValg === 'haev' ? 'border-slate-400 bg-slate-50' : 'border-slate-200 bg-white opacity-40 hover:opacity-70',
+            opsparValg === 'haev'
+              ? 'border-slate-400 bg-slate-50'
+              : 'border-slate-200 bg-white opacity-40 hover:opacity-70',
           ]"
         >
           <p class="font-medium text-slate-700">Hæves</p>
@@ -237,7 +283,9 @@ const trin = computed(() => [
           :class="[
             KLEUR.aaretsOverskud.borderLeft,
             'border-l-4',
-            opsparValg === 'opspar' ? 'border-slate-400 bg-slate-50' : 'border-slate-200 bg-white opacity-40 hover:opacity-70',
+            opsparValg === 'opspar'
+              ? 'border-slate-400 bg-slate-50'
+              : 'border-slate-200 bg-white opacity-40 hover:opacity-70',
           ]"
         >
           <p class="font-medium text-slate-700">Opspares i VSO</p>
@@ -250,9 +298,9 @@ const trin = computed(() => [
         </a>
       </div>
       <p class="mt-4 text-center text-xs text-slate-500">
-        Valget for {{ aar }} er sat på VSO-siden til "{{ opsparValg === 'opspar' ? 'Opspares' : 'Hæves' }}" -
-        den fremhævede boks ovenfor. Farvet kant + <span class="text-emerald-700">↑</span> viser hvor et tal
-        kommer fra - klik for at hoppe op til det trin, det er beregnet i.
+        Valget for {{ aar }} er sat på VSO-siden til "{{ opsparValg === 'opspar' ? 'Opspares' : 'Hæves' }}" - den
+        fremhævede boks ovenfor. Farvet kant + <span class="text-emerald-700">↑</span> viser hvor et tal kommer fra -
+        klik for at hoppe op til det trin, det er beregnet i.
       </p>
     </section>
   </div>

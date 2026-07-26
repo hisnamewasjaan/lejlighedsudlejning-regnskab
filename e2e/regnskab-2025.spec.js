@@ -24,18 +24,14 @@ import { expect, test } from '@playwright/test'
  * kendte, dokumenterede afrundingsafvigelse når testen køres mod de rigtige, lokale tal.
  */
 const egenFacitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../udlejning 2025/facit.json')
-const facitPath = existsSync(egenFacitPath) ? egenFacitPath : resolve(dirname(fileURLToPath(import.meta.url)), '../tests/fixtures/facit.json')
+const facitPath = existsSync(egenFacitPath)
+  ? egenFacitPath
+  : resolve(dirname(fileURLToPath(import.meta.url)), '../tests/fixtures/facit.json')
 const facit = JSON.parse(readFileSync(facitPath, 'utf-8'))
 const PRIMO_2025 = facit.kapitalafkastgrundlagPrimo2025
 
 function parseKr(tekst) {
-  return Number(
-    tekst
-      .replace(/kr\.?/i, '')
-      .trim()
-      .replace(/\./g, '')
-      .replace(',', '.'),
-  )
+  return Number(tekst.replace(/kr\.?/i, '').trim().replace(/\./g, '').replace(',', '.'))
 }
 
 test.describe('Regnskab 2025 – e2e mod bekræftede TastSelv-tal', () => {
@@ -48,7 +44,9 @@ test.describe('Regnskab 2025 – e2e mod bekræftede TastSelv-tal', () => {
     await expect(page.getByRole('heading', { name: 'Lejlighedsoplysninger' })).toBeVisible()
   })
 
-  test('Rapporter viser de bekræftede 2025-rubrikker efter fuld UI-indtastning med de rigtige primo-tal', async ({ page }) => {
+  test('Rapporter viser de bekræftede 2025-rubrikker efter fuld UI-indtastning med de rigtige primo-tal', async ({
+    page,
+  }) => {
     await page.goto('/stamdata')
     await page.getByLabel('Anskaffelsespris (kr.)').fill(String(PRIMO_2025.anskaffelsessum))
     await page.getByRole('button', { name: 'Gem lejlighedsoplysninger' }).click()
@@ -102,11 +100,14 @@ test.describe('Regnskab 2025 – e2e mod bekræftede TastSelv-tal', () => {
     const kapitalafkast = parseKr(kapitalafkastTekst)
     expect(Math.abs(kapitalafkast - facit.rubrik148_kapitalafkast)).toBeLessThan(350)
 
-    const aaretsOverskudTekst = await page.getByRole('row', { name: /Årets overskud/ }).locator('td').last().innerText()
+    const aaretsOverskudTekst = await page
+      .getByRole('row', { name: /Årets overskud/ })
+      .locator('td')
+      .last()
+      .innerText()
     const aaretsOverskud = parseKr(aaretsOverskudTekst)
     expect(Math.abs(aaretsOverskud - facit.rubrik149_indkomstTilVirksomhedsbeskatning)).toBeLessThan(350)
 
-    // eslint-disable-next-line no-console
     console.log(
       `Kapitalafkast: app ${kapitalafkast} kr. vs. facit ${facit.rubrik148_kapitalafkast} kr. ` +
         `(afvigelse: ${(kapitalafkast - facit.rubrik148_kapitalafkast).toFixed(2)} kr.)`,

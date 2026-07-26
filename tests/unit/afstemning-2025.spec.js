@@ -83,7 +83,7 @@ describe('Afstemning 2025 – rigtige banktransaktioner', () => {
 
     // Lille, dokumenteret restafvigelse (se README.md i "udlejning 2025/") - formentlig
     // periodisering/afrunding. Testen holder øje med at den ikke vokser uventet.
-    // eslint-disable-next-line no-console
+
     console.log(
       `Afstemning 2025: appens beregnede overskud ${overskud} kr. vs. revisorens ${facit.rubrik149_indkomstTilVirksomhedsbeskatning} kr. (afvigelse: ${afvigelse} kr.)`,
     )

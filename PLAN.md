@@ -80,7 +80,7 @@ Reglerne stammer fra **Virksomhedsskatteloven (VSL)**.
 
 - **Grundlag** = Aktiver i VSO (ejendomsværdi + banksaldo) minus erhvervsmæssig gæld (realkreditgæld)
 - **Kapitalafkastsats** fastsættes af SKAT hvert år (0% i 2021-2023, pt. ca. 3-4%)
-- **Kapitalafkast** = Grundlag × Sats → beskattes som *kapitalindkomst* (ikke personlig indkomst)
+- **Kapitalafkast** = Grundlag × Sats → beskattes som _kapitalindkomst_ (ikke personlig indkomst)
 - **I appen**: Beregnes automatisk. Sats indtastes manuelt fra SKAT's hjemmeside.
 
 #### Årets overskud og virksomhedsskat (VSL § 10)
@@ -113,13 +113,13 @@ Når der hæves penge (overføres til privat), sker det i denne rækkefølge:
 ### Afskrivninger (Afskrivningsloven)
 
 | Type                                                        | Sats                                   | Metode            | Grundlag          |
-|-------------------------------------------------------------|----------------------------------------|-------------------|-------------------|
+| ----------------------------------------------------------- | -------------------------------------- | ----------------- | ----------------- |
 | Bygning                                                     | ~~4%~~ **Ikke afskrivningsberettiget** | –                 | –                 |
 | Inventar/installationer (løsøre, fx ved møbleret udlejning) | 25%                                    | Saldo             | Afskrivningssaldo |
 | Vedligeholdelse                                             | 100%                                   | Straksafskrivning | Faktisk udgift    |
 
 > **Afklaret**: Bygningen kan ikke afskrives, da lejligheden anvendes til beboelse – afskrivningsloven § 14, stk. 2, nr. 4 undtager beboelsesejendomme fra bygningsafskrivning (uanset erhvervsmæssig udlejning/VSO). Se [SKATTEREGLER.md](./SKATTEREGLER.md) for kilder. Appen skal derfor
-**ikke** tilbyde bygningsafskrivning som fradrag for denne lejlighed.
+> **ikke** tilbyde bygningsafskrivning som fradrag for denne lejlighed.
 
 - **I appen**: Automatisk beregning baseret på lejlighedens stamdata og inventarliste (kun løsøre/driftsmidler, ikke selve bygningen)
 
@@ -128,7 +128,7 @@ Når der hæves penge (overføres til privat), sker det i denne rækkefølge:
 ### Fradragsberettigede udgifter
 
 | Udgift                    | Fradrag   | Note                      |
-|---------------------------|-----------|---------------------------|
+| ------------------------- | --------- | ------------------------- |
 | Ejerforeningsbidrag       | 100%      | Løbende driftsudgift      |
 | Grundskyld (ejendomsskat) | 100%      | Løbende driftsudgift      |
 | Forsikring                | 100%      | Løbende driftsudgift      |

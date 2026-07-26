@@ -9,7 +9,9 @@ import { beregnAaretsOverskud, fordelHaevning } from '@/composables/useVsoBeregn
 // tests/fixtures/ (se README.md der), så testen stadig kører i CI/på en frisk klone.
 // Bemærk: mappenavnet indeholder et mellemrum, så vi bruger path.resolve fremfor URL-parsing.
 const egenFacitPath = resolve(dirname(fileURLToPath(import.meta.url)), '../../udlejning 2025/facit.json')
-const facitPath = existsSync(egenFacitPath) ? egenFacitPath : resolve(dirname(fileURLToPath(import.meta.url)), '../fixtures/facit.json')
+const facitPath = existsSync(egenFacitPath)
+  ? egenFacitPath
+  : resolve(dirname(fileURLToPath(import.meta.url)), '../fixtures/facit.json')
 
 describe('Regnskab 2025 – validering mod revisorens tal', () => {
   const facit = JSON.parse(readFileSync(facitPath, 'utf-8'))

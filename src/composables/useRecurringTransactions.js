@@ -45,10 +45,7 @@ export function beregnManglendePerioder({ template, transactions, tilDato }) {
     const periodeSlut = naesteDato(periodeStart, template.hyppighed)
     return !transactions.some(
       (t) =>
-        t.type === template.type &&
-        t.kategori === template.kategori &&
-        t.dato >= periodeStart &&
-        t.dato < periodeSlut,
+        t.type === template.type && t.kategori === template.kategori && t.dato >= periodeStart && t.dato < periodeSlut,
     )
   })
 }

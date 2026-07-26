@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-A local-first Danish bookkeeping app for a single apartment rental run under *virksomhedsordningen*
+A local-first Danish bookkeeping app for a single apartment rental run under _virksomhedsordningen_
 (VSO — a Danish tax scheme for sole proprietors). It replaces an accountant for one real, specific
 set of books — not a generic multi-tenant SaaS. All data lives in the browser's IndexedDB (via
 Dexie.js); there is no backend, no server, no `.env`.
@@ -54,7 +54,7 @@ that migrates existing rows). When changing the schema, add a new version block 
 an existing one.
 
 **Composables as the data layer** (`src/composables/`): each domain entity has a `useX.js`
-composable that both defines the CRUD operations *and* holds the state, e.g. `useTransactions`,
+composable that both defines the CRUD operations _and_ holds the state, e.g. `useTransactions`,
 `useProperty`, `useTenants`, `useVsoSettings`, `useRecurringTransactions`. These use a **module-level
 singleton ref**, not per-call local state: the `ref()` is declared outside the exported `useX()`
 function, and `load()` runs once at module scope. This is intentional — multiple components mount
@@ -81,7 +81,7 @@ number should be reconciled/entered. Used by `BeregningView` and `SelvangivelseV
 `type` field — income (`INDTAEGT_KATEGORIER`), expense (`UDGIFT_KATEGORIER`, defined in
 `useTransactions.js`), and private withdrawal ("Hævning (privat)"). Withdrawals are deliberately
 excluded from the P&L (resultatopgørelse) but feed into the VSO hæverækkefølge (withdrawal-order)
-calculation. Deposit repayment (`depositum_tilbagebetaling`) is an *expense* category, not negative
+calculation. Deposit repayment (`depositum_tilbagebetaling`) is an _expense_ category, not negative
 income — this was a deliberate fix, not an oversight (see `PLAN.md` step 5).
 
 **Recurring transactions** (`useRecurringTransactions.js`): templates (e.g. monthly rent, insurance)

@@ -17,9 +17,7 @@ const { templates, addTemplate, deleteTemplate } = useRecurringTransactions()
 const ejendomsTransaktioner = computed(() => transactions.value.filter((t) => t.ejendomId === ejendom.value))
 const ejendomsTemplates = computed(() => templates.value.filter((t) => t.ejendomId === ejendom.value))
 
-const kategoriLabels = Object.fromEntries(
-  [...INDTAEGT_KATEGORIER, ...UDGIFT_KATEGORIER].map((k) => [k.value, k.label]),
-)
+const kategoriLabels = Object.fromEntries([...INDTAEGT_KATEGORIER, ...UDGIFT_KATEGORIER].map((k) => [k.value, k.label]))
 
 const idag = new Date().toISOString().slice(0, 10)
 
@@ -148,8 +146,8 @@ const aaretsHaevninger = computed(() =>
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">Faste posteringer</h2>
       <p class="mt-1 text-sm text-slate-500">
-        Opret tilbagevendende poster (fx husleje, ejerforening, forsikring) én gang, og få listet hvilke
-        perioder der mangler at blive registreret.
+        Opret tilbagevendende poster (fx husleje, ejerforening, forsikring) én gang, og få listet hvilke perioder der
+        mangler at blive registreret.
       </p>
 
       <ul v-if="ejendomsTemplates.length" class="mt-4 divide-y divide-slate-200">
@@ -157,8 +155,7 @@ const aaretsHaevninger = computed(() =>
           <div class="flex items-center justify-between">
             <div>
               <p class="font-medium">
-                {{ kategoriLabels[entry.template.kategori] }} ·
-                {{ formatTal(entry.template.belob) }} kr. ·
+                {{ kategoriLabels[entry.template.kategori] }} · {{ formatTal(entry.template.belob) }} kr. ·
                 {{ HYPPIGHED_LABELS[entry.template.hyppighed] }}
               </p>
               <p class="text-slate-500">
@@ -174,7 +171,9 @@ const aaretsHaevninger = computed(() =>
               >
                 Opret {{ entry.manglende.length }} manglende
               </button>
-              <button class="text-red-600 hover:text-red-800" @click="deleteTemplate(entry.template.id)">Slet skabelon</button>
+              <button class="text-red-600 hover:text-red-800" @click="deleteTemplate(entry.template.id)">
+                Slet skabelon
+              </button>
             </div>
           </div>
         </li>
@@ -184,7 +183,11 @@ const aaretsHaevninger = computed(() =>
       <form class="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2" @submit.prevent="onAddTemplate">
         <label class="flex flex-col gap-1 text-sm">
           Type
-          <select v-model="templateForm.type" class="rounded border border-slate-300 px-3 py-2" @change="onTemplateTypeChange">
+          <select
+            v-model="templateForm.type"
+            class="rounded border border-slate-300 px-3 py-2"
+            @change="onTemplateTypeChange"
+          >
             <option value="indtaegt">Indtægt</option>
             <option value="udgift">Udgift</option>
           </select>
@@ -256,7 +259,10 @@ const aaretsHaevninger = computed(() =>
           <input v-model="form.note" type="text" class="rounded border border-slate-300 px-3 py-2" />
         </label>
         <div class="flex items-center gap-3 sm:col-span-2">
-          <button type="submit" class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+          <button
+            type="submit"
+            class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          >
             Registrér
           </button>
           <span v-if="saved" class="text-sm text-emerald-600">Gemt</span>

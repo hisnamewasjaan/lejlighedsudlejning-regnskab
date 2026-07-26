@@ -13,7 +13,11 @@ export function useTenants(ejendomId) {
     loading.value = true
     tenants.value =
       id != null
-        ? await db.tenants.where('ejendomId').equals(id).sortBy('lejemaalStart').then((r) => r.reverse())
+        ? await db.tenants
+            .where('ejendomId')
+            .equals(id)
+            .sortBy('lejemaalStart')
+            .then((r) => r.reverse())
         : []
     loading.value = false
   }

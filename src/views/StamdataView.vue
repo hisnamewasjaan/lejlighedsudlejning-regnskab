@@ -130,8 +130,8 @@ async function onImportBackup(event) {
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">Dine ejendomme</h2>
       <p class="mt-1 text-sm text-slate-500">
-        Hver ejendom har sit eget regnskab (lejere, bogføring, VSO-indstillinger). Skift mellem dem
-        her eller i vælgeren øverst til højre i menuen.
+        Hver ejendom har sit eget regnskab (lejere, bogføring, VSO-indstillinger). Skift mellem dem her eller i vælgeren
+        øverst til højre i menuen.
       </p>
 
       <ul v-if="ejendomme.length" class="mt-4 divide-y divide-slate-200">
@@ -168,7 +168,10 @@ async function onImportBackup(event) {
           <input v-model="nyEjendomForm.bfeNr" type="text" class="rounded border border-slate-300 px-3 py-2" />
         </label>
         <div class="flex items-center gap-3 sm:col-span-2">
-          <button type="submit" class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+          <button
+            type="submit"
+            class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          >
             Opret ejendom
           </button>
           <button type="button" class="text-sm text-slate-500 hover:text-slate-700" @click="visOpretForm = false">
@@ -176,8 +179,8 @@ async function onImportBackup(event) {
           </button>
         </div>
         <p class="text-xs text-slate-500 sm:col-span-2">
-          Ejendomsværdi og anskaffelsespris kan udfyldes/rettes i "Lejlighedsoplysninger" nedenfor,
-          når ejendommen er oprettet og valgt.
+          Ejendomsværdi og anskaffelsespris kan udfyldes/rettes i "Lejlighedsoplysninger" nedenfor, når ejendommen er
+          oprettet og valgt.
         </p>
       </form>
     </section>
@@ -192,10 +195,15 @@ async function onImportBackup(event) {
           </label>
           <div class="flex flex-col gap-1 text-sm">
             <label for="bfe-nr">BFE-nummer</label>
-            <input id="bfe-nr" v-model="propertyForm.bfeNr" type="text" class="rounded border border-slate-300 px-3 py-2" />
+            <input
+              id="bfe-nr"
+              v-model="propertyForm.bfeNr"
+              type="text"
+              class="rounded border border-slate-300 px-3 py-2"
+            />
             <span class="text-xs text-slate-500">
-              "BBR-nummer" findes ikke som selvstændigt opslagsnummer – BFE-nummeret (Bestemt Fast
-              Ejendom) er ejendommens faktiske ID. Gratis opslag på adressen på
+              "BBR-nummer" findes ikke som selvstændigt opslagsnummer – BFE-nummeret (Bestemt Fast Ejendom) er
+              ejendommens faktiske ID. Gratis opslag på adressen på
               <a href="https://boligejer.dk" target="_blank" rel="noopener" class="underline">boligejer.dk</a>
               eller
               <a href="https://www.matriklen.dk" target="_blank" rel="noopener" class="underline">matriklen.dk</a>.
@@ -211,7 +219,9 @@ async function onImportBackup(event) {
             />
             <span class="text-xs text-slate-500">
               Den offentlige ejendomsvurdering – se
-              <a href="https://vurderingsportalen.dk" target="_blank" rel="noopener" class="underline">vurderingsportalen.dk</a>
+              <a href="https://vurderingsportalen.dk" target="_blank" rel="noopener" class="underline"
+                >vurderingsportalen.dk</a
+              >
               eller TastSelv → Skatteoplysninger → Ejendomsoplysninger (rubrik 172). Bruges kun til
               reference/ejendomsværdiskat – <strong>ikke</strong> i VSO-beregningen (se Anskaffelsespris).
             </span>
@@ -227,17 +237,20 @@ async function onImportBackup(event) {
             <span class="text-xs text-slate-500">
               Købesummen fra skødet/købsaftalen, eller en ejendomsdatarapport fra
               <a href="https://tinglysning.dk" target="_blank" rel="noopener" class="underline">tinglysning.dk</a>.
-              <strong>Dette felt bruges i kapitalafkastgrundlaget</strong> (VSL § 8) – fast ejendom
-              indgår til den kontante anskaffelsessum, ikke den løbende ejendomsvurdering.
+              <strong>Dette felt bruges i kapitalafkastgrundlaget</strong> (VSL § 8) – fast ejendom indgår til den
+              kontante anskaffelsessum, ikke den løbende ejendomsvurdering.
             </span>
           </div>
           <p class="text-sm text-slate-500 sm:col-span-2">
             Realkreditgæld indtastes på <RouterLink to="/vso" class="underline">VSO-siden</RouterLink>
-            for hvert enkelt år (primo året) i stedet for her, da restgælden – og dermed
-            kapitalafkastgrundlaget – ændrer sig hvert år, efterhånden som lånet afdrages.
+            for hvert enkelt år (primo året) i stedet for her, da restgælden – og dermed kapitalafkastgrundlaget –
+            ændrer sig hvert år, efterhånden som lånet afdrages.
           </p>
           <div class="flex items-center gap-3 sm:col-span-2">
-            <button type="submit" class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+            <button
+              type="submit"
+              class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
               Gem lejlighedsoplysninger
             </button>
             <span v-if="propertySaved" class="text-sm text-emerald-600">Gemt</span>
@@ -281,19 +294,30 @@ async function onImportBackup(event) {
           </label>
           <label class="flex flex-col gap-1 text-sm">
             Månedlig husleje (kr.)
-            <input v-model.number="tenantForm.maanedligHusleje" type="number" class="rounded border border-slate-300 px-3 py-2" />
+            <input
+              v-model.number="tenantForm.maanedligHusleje"
+              type="number"
+              class="rounded border border-slate-300 px-3 py-2"
+            />
           </label>
           <label class="flex flex-col gap-1 text-sm">
             Depositum (kr.)
-            <input v-model.number="tenantForm.depositum" type="number" class="rounded border border-slate-300 px-3 py-2" />
+            <input
+              v-model.number="tenantForm.depositum"
+              type="number"
+              class="rounded border border-slate-300 px-3 py-2"
+            />
           </label>
           <div class="sm:col-span-2">
-            <button type="submit" class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700">
+            <button
+              type="submit"
+              class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+            >
               Tilføj lejer
             </button>
             <p class="mt-2 text-xs text-slate-500">
-              Opretter automatisk en depositum-postering og en tilbagevendende husleje-postering, som kan
-              genereres måned for måned under <RouterLink to="/bogforing" class="underline">Bogføring</RouterLink>.
+              Opretter automatisk en depositum-postering og en tilbagevendende husleje-postering, som kan genereres
+              måned for måned under <RouterLink to="/bogforing" class="underline">Bogføring</RouterLink>.
             </p>
           </div>
         </form>
@@ -303,11 +327,14 @@ async function onImportBackup(event) {
     <section class="rounded-lg border border-slate-200 bg-white p-6">
       <h2 class="text-lg font-medium">Backup</h2>
       <p class="mt-1 text-sm text-slate-500">
-        Al data ligger kun i browseren. Tag jævnligt en backup, så I ikke mister regnskabet. En
-        backup dækker alle jeres ejendomme samlet.
+        Al data ligger kun i browseren. Tag jævnligt en backup, så I ikke mister regnskabet. En backup dækker alle jeres
+        ejendomme samlet.
       </p>
       <div class="mt-4 flex flex-wrap items-center gap-3">
-        <button class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" @click="eksporterBackup">
+        <button
+          class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          @click="eksporterBackup"
+        >
           Eksportér backup
         </button>
         <label class="rounded border border-slate-300 px-4 py-2 text-sm font-medium hover:bg-slate-50">

@@ -25,7 +25,7 @@ genbruge de samme `.upgrade()`-trin som allerede findes (og er testet) for den l
 `dexie-export-import` kan ikke selv migrere data mellem schemaversioner — den kan kun importere 1:1
 mod en database, der allerede er på præcis samme version. Men Dexie's **egen** versioneringsmekanisme
 (som allerede er dokumenteret og testet i `tests/unit/dbMigrations.spec.js`) kører automatisk de
-manglende `.upgrade()`-trin, når en *rigtig* IndexedDB-database åbnes med en nyere skema-deklaration
+manglende `.upgrade()`-trin, når en _rigtig_ IndexedDB-database åbnes med en nyere skema-deklaration
 end den er på. Den mekanisme genbruger vi:
 
 1. Læs backuppens `data.databaseVersion` fra JSON-filen.
@@ -35,10 +35,10 @@ end den er på. Den mekanisme genbruger vi:
    ikke migreres.
 4. Hvis backuppen er **ældre**:
    a. Opret en midlertidig, unikt navngivet Dexie-database, deklareret **kun** op til backuppens
-      version (matcher derfor præcist → `importInto` lykkes uden `acceptVersionDiff`).
+   version (matcher derfor præcist → `importInto` lykkes uden `acceptVersionDiff`).
    b. Luk den, genåbn samme midlertidige database-navn, men nu deklareret med **hele** version-kæden
-      op til nuværende version. Dexie opdager selv at databasen er "bagud" og kører automatisk de
-      manglende `.upgrade()`-trin — præcis den samme kode der allerede migrerer den levende database.
+   op til nuværende version. Dexie opdager selv at databasen er "bagud" og kører automatisk de
+   manglende `.upgrade()`-trin — præcis den samme kode der allerede migrerer den levende database.
    c. Eksportér den nu opgraderede midlertidige database til en ny JSON-blob.
    d. Importér den blob ind i den rigtige `db` (versionerne matcher nu → normal import).
    e. Slet den midlertidige database.
@@ -72,6 +72,7 @@ stedet for en separat hårdkodet konstant, så der ikke er to steder at huske at
 kun hvordan de kaldes (jf. den kritiske regel der allerede står i filens header-kommentar).
 
 **`src/db/backup.js`** — omskriv `importerBackup` til at implementere trin 1-4 ovenfor:
+
 - Læs og parse JSON-filen selv (eller brug `dexie-export-import`'s metadata-helper hvis den findes —
   tjek biblioteket for en `peakImportFile`-lignende funktion før man parser JSON manuelt) for at
   hente `databaseVersion` uden at forbruge filen.
@@ -96,6 +97,7 @@ versioner fejler uden migrering; det er ikke længere sandt.
 ## Tests
 
 **`tests/unit/backup.spec.js`** — tilføj:
+
 - Import af backup fra en nyere version end nuværende → forvent kastet fejl med forståelig
   besked, og at eksisterende data i `db` er urørt bagefter (atomicitet bevaret).
 - Import af backup fra en ældre version → genbrug mønsteret fra `seedGammelDatabase()` i

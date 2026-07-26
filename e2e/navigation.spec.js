@@ -125,7 +125,9 @@ test('en privat hævning tælles ikke med i resultatet', async ({ page }) => {
   await expect(page.getByText('Resultat').locator('xpath=following-sibling::p')).toHaveText('0 kr.')
 })
 
-test('depositum ind/ud tælles ikke med i resultatet eller driftsresultatet - det er gæld til lejeren', async ({ page }) => {
+test('depositum ind/ud tælles ikke med i resultatet eller driftsresultatet - det er gæld til lejeren', async ({
+  page,
+}) => {
   const thisYear = new Date().getFullYear()
 
   await page.goto('/bogforing')
@@ -150,7 +152,10 @@ test('depositum ind/ud tælles ikke med i resultatet eller driftsresultatet - de
   await expect(page.getByText('Årsrapport ' + thisYear)).toBeVisible()
   await expect(page.getByRole('cell', { name: 'Depositum', exact: true })).not.toBeVisible()
   await expect(
-    page.getByRole('row', { name: /Driftsresultat \(fra resultatopgørelsen ovenfor\)/ }).locator('td').last(),
+    page
+      .getByRole('row', { name: /Driftsresultat \(fra resultatopgørelsen ovenfor\)/ })
+      .locator('td')
+      .last(),
   ).toHaveText('0 kr.')
 })
 
@@ -190,7 +195,9 @@ test('foreslår og gemmer næste års "hensat til senere hævning" ud fra dette 
   await expect(page.getByText('Gemt for 2031')).toBeVisible()
 
   await page.getByLabel('År', { exact: true }).fill('2031')
-  await expect(page.getByLabel('Allerede beskattet beløb til rådighed, uden yderligere skat (kr.)')).toHaveValue('10000')
+  await expect(page.getByLabel('Allerede beskattet beløb til rådighed, uden yderligere skat (kr.)')).toHaveValue(
+    '10000',
+  )
 })
 
 test('viser huslejestatus på dashboard når husleje er betalt', async ({ page }) => {
@@ -241,7 +248,9 @@ test('viser resultatopgørelse på rapport-siden ud fra bogførte posteringer', 
   await expect(page.getByRole('button', { name: 'Eksportér til PDF' })).toBeVisible()
 })
 
-test('renteindtægt holdes uden for driftsresultatet, og VSO-feltet for realkreditrenter/-bidrag indgår i årets overskud', async ({ page }) => {
+test('renteindtægt holdes uden for driftsresultatet, og VSO-feltet for realkreditrenter/-bidrag indgår i årets overskud', async ({
+  page,
+}) => {
   const thisYear = new Date().getFullYear()
 
   await page.goto('/vso')

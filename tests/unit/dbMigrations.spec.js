@@ -106,7 +106,9 @@ describe('db-migrationer', () => {
       await d.table('tenants').add({ navn: 'Jane', lejemaalStart: '2025-01-01' })
       await d.table('transactions').add({ dato: '2025-01-01', type: 'indtaegt', kategori: 'husleje', belob: 8000 })
       await d.table('vsoSettings').add({ aar: 2025, kapitalafkastsats: 0.02 })
-      await d.table('recurringTransactions').add({ type: 'indtaegt', kategori: 'husleje', hyppighed: 'maanedlig', startDato: '2025-01-01' })
+      await d
+        .table('recurringTransactions')
+        .add({ type: 'indtaegt', kategori: 'husleje', hyppighed: 'maanedlig', startDato: '2025-01-01' })
       return ejendomId
     })
     const forventetEjendomId = (await gammel.table('property').toArray())[0].id

@@ -22,10 +22,14 @@ describe('genererPerioder', () => {
 
   it('understøtter kvartalsvis og årlig hyppighed', () => {
     expect(genererPerioder({ ...husleje, hyppighed: 'kvartalsvis' }, '2026-08-01')).toEqual([
-      '2026-01-01', '2026-04-01', '2026-07-01',
+      '2026-01-01',
+      '2026-04-01',
+      '2026-07-01',
     ])
     expect(genererPerioder({ ...husleje, hyppighed: 'aarlig', startDato: '2024-01-01' }, '2026-08-01')).toEqual([
-      '2024-01-01', '2025-01-01', '2026-01-01',
+      '2024-01-01',
+      '2025-01-01',
+      '2026-01-01',
     ])
   })
 })
@@ -35,16 +39,15 @@ describe('beregnManglendePerioder', () => {
     const transactions = [{ type: 'indtaegt', kategori: 'husleje', dato: '2026-02-05', belob: 8000 }]
 
     expect(beregnManglendePerioder({ template: husleje, transactions, tilDato: '2026-03-01' })).toEqual([
-      '2026-01-01', '2026-03-01',
+      '2026-01-01',
+      '2026-03-01',
     ])
   })
 
   it('matcher ikke posteringer af anden type/kategori', () => {
     const transactions = [{ type: 'udgift', kategori: 'husleje', dato: '2026-01-05', belob: 8000 }]
 
-    expect(beregnManglendePerioder({ template: husleje, transactions, tilDato: '2026-01-01' })).toEqual([
-      '2026-01-01',
-    ])
+    expect(beregnManglendePerioder({ template: husleje, transactions, tilDato: '2026-01-01' })).toEqual(['2026-01-01'])
   })
 })
 

@@ -84,7 +84,6 @@ const huslejestatus = computed(() =>
     tilOgMedMaaned: tilOgMedMaaned.value,
   }),
 )
-
 </script>
 
 <template>

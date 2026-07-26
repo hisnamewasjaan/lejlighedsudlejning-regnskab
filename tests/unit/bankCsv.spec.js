@@ -86,7 +86,13 @@ describe('foreslaaKategori', () => {
   })
 
   it('genkender en hævning ud fra "privat" i noten, uanset kategori', () => {
-    const row = { kategori: 'Øvrige udgifter', underkategori: 'Overførsler', tekst: 'Donor', beloeb: -40000, note: 'privat brug' }
+    const row = {
+      kategori: 'Øvrige udgifter',
+      underkategori: 'Overførsler',
+      tekst: 'Donor',
+      beloeb: -40000,
+      note: 'privat brug',
+    }
     expect(foreslaaKategori(row)).toEqual({ type: 'haevning' })
   })
 

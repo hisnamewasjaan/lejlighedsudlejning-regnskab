@@ -17,7 +17,11 @@ describe('beregnKapitalafkast', () => {
 describe('beregnKapitalafkastgrundlag', () => {
   it('lægger anskaffelsessum og banksaldo sammen og trækker realkreditgæld fra', () => {
     expect(
-      beregnKapitalafkastgrundlag({ fastEjendomAnskaffelsessum: 3_000_000, banksaldo: 50_000, realkreditgaeld: 1_500_000 }),
+      beregnKapitalafkastgrundlag({
+        fastEjendomAnskaffelsessum: 3_000_000,
+        banksaldo: 50_000,
+        realkreditgaeld: 1_500_000,
+      }),
     ).toBe(1_550_000)
   })
 

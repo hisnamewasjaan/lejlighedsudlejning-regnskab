@@ -32,10 +32,14 @@ function summer(type, ekskluderKategorier) {
 // er hverken indtægt eller udgift, men en gæld til lejeren (samme princip som "skyldigt depositum" i
 // kapitalafkastgrundlaget), og holdes derfor helt uden for både driftsresultat og årets overskud.
 const driftsresultat = computed(
-  () => summer('indtaegt', ['renteindtaegt', 'depositum']) - summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']),
+  () =>
+    summer('indtaegt', ['renteindtaegt', 'depositum']) -
+    summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']),
 )
 const renteindtaegterIAlt = computed(() =>
-  aaretsTransaktioner.value.filter((t) => t.type === 'indtaegt' && t.kategori === 'renteindtaegt').reduce((sum, t) => sum + t.belob, 0),
+  aaretsTransaktioner.value
+    .filter((t) => t.type === 'indtaegt' && t.kategori === 'renteindtaegt')
+    .reduce((sum, t) => sum + t.belob, 0),
 )
 const renteudgifterIAlt = computed(() => settings.value?.realkreditrenterOgBidrag ?? 0)
 
@@ -48,11 +52,14 @@ const kapitalafkastgrundlag = computed(() =>
     hensatTilSenereHaevning: settings.value?.beskattetTilRaadighed ?? 0,
   }),
 )
-const kapitalafkast = computed(() => beregnKapitalafkast(kapitalafkastgrundlag.value, settings.value?.kapitalafkastsats ?? 0))
+const kapitalafkast = computed(() =>
+  beregnKapitalafkast(kapitalafkastgrundlag.value, settings.value?.kapitalafkastsats ?? 0),
+)
 const aaretsOverskud = computed(() =>
   beregnAaretsOverskud({
     indtaegter: summer('indtaegt', ['renteindtaegt', 'depositum']) + renteindtaegterIAlt.value,
-    udgifter: summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']) + renteudgifterIAlt.value,
+    udgifter:
+      summer('udgift', ['realkreditrenter', 'realkreditbidrag', 'depositum_tilbagebetaling']) + renteudgifterIAlt.value,
     afskrivninger: settings.value?.afskrivninger ?? 0,
     kapitalafkast: kapitalafkast.value,
   }),
@@ -149,8 +156,8 @@ const kapitalafkastgrundlagKomponenter = computed(() => [
       </label>
     </div>
     <p class="text-sm text-slate-500">
-      Oversigt over de TastSelv-rubrikker der er relevante for virksomhedsordningen for {{ aar }}, med appens
-      beregnede værdi og hvad du selv skal gøre med tallet. Se VSO- og Rapport-siden for selve udregningerne.
+      Oversigt over de TastSelv-rubrikker der er relevante for virksomhedsordningen for {{ aar }}, med appens beregnede
+      værdi og hvad du selv skal gøre med tallet. Se VSO- og Rapport-siden for selve udregningerne.
     </p>
 
     <section class="rounded-lg border border-slate-200 bg-white p-6">

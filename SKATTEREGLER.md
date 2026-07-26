@@ -8,7 +8,7 @@ Se [PLAN.md](./PLAN.md) for den overordnede projektplan.
 ## Aktuelle satser
 
 | Sats                 | 2025 | 2026                                                                                               |
-|----------------------|------|----------------------------------------------------------------------------------------------------|
+| -------------------- | ---- | -------------------------------------------------------------------------------------------------- |
 | Kapitalafkastsats    | 2%   | Endnu ikke offentliggjort (opgøres ud fra gnsn. af Nationalbankens udlånsrente for 1. halvår 2026) |
 | Rentekorrektionssats | 5%   | Endnu ikke offentliggjort                                                                          |
 
@@ -35,6 +35,7 @@ Det er den faktiske anvendelse (beboelse), der er afgørende – ikke om udlejni
 4%-linjen for bygningsafskrivning i afskrivningsskemaet fjernes/deaktiveres for denne lejlighed – der er intet årligt afskrivningsfradrag på selve bygningen. Straksfradrag for løbende vedligeholdelse (100%) og evt. driftsmiddelafskrivning (25% saldo) for løsøre/inventar (fx hårde hvidevarer ved møbleret udlejning) er ikke berørt af denne undtagelse, men følger egne regler.
 
 Kilder:
+
 - [Afskrivningsloven § 14 – danskelove.dk](https://danskelove.dk/afskrivningsloven/14)
 - [C.C.2.4.4.1 Afskrivningsberettigede bygninger – info.skat.dk](https://info.skat.dk/data.aspx?oid=2083984)
 - [Bygninger, der ikke kan afskrives – tax.dk](https://www.tax.dk/lv/lve/E_C_4_1_1.htm)
@@ -60,6 +61,7 @@ Da alle årenes opsparingslinjer i TastSelv konsekvent er mærket "22% skat", er
 Dette er et **fjerde, selvstændigt beløb** – forskelligt fra både indskudskontoen (skattefri tilbagebetaling af eget indskud) og opsparet overskud (hvor der stadig mangler restskat ved hævning). Det dækker beløb der allerede er beskattet fuldt ud (typisk "hensat til senere hævning", jf. rubrik 152 i TastSelv), men endnu ikke fysisk overført fra virksomhedens til den private konto. Da det ikke udløser yderligere skat ved hævning, er det tilføjet som **højeste prioritet** i appens hævningsberegner (`fordelHaevning` i `useVsoBeregning.js`), foran de fire lovbestemte trin i VSL § 5. Indtastes i feltet "Allerede beskattet beløb til rådighed" på VSO-siden – tallet skal opdateres årligt ud fra revisorens opgørelse.
 
 Kilder:
+
 - [Rubrik 111 udfyldes: Trin for trin (2026) – Digi-Tal](https://www.digi-tal.dk/blog/rubrik-111-saadan-udfyldes/)
 - [C.C.5.2.10 Overskud og virksomhedsskat – info.skat.dk](https://info.skat.dk/data.aspx?oid=1948909)
 - Egen historik fra TastSelv (2020-2026) og revisorens opgørelse efter 2025-regnskabet
@@ -93,6 +95,7 @@ Fire delfejl fundet og rettet ved at afstemme appens beregnede kapitalafkast mod
 **6d. Hensat til senere hævning som femte fradragspost.** VSL § 8, stk. 1 (hentet direkte fra lovteksten) lister **fem** fradrag fra aktiverne, hvoraf vi oprindeligt kun havde modelleret to (gæld, depositum): gæld, **beløb afsat efter §§ 4 og 10, stk. 1** ("hensat til senere hævning"), indestående på mellemregningskonto (§ 4a), tidligere års § 4b-beløb, og beløb overført til privatøkonomien med virkning fra årets begyndelse. Kun den anden er relevant for jer – det er præcis det samme beløb som feltet "Allerede beskattet beløb til rådighed" (revisorens "hensat til senere hævning"), nu genbrugt som et femte fradrag i `beregnKapitalafkastgrundlag()`. Skal indtastes som beløbet primo året, ikke den løbende saldo.
 
 Kilder:
+
 - [Virksomhedsskatteloven § 8 – danskelove.dk](https://danskelove.dk/virksomhedsskatteloven/8)
 - [C.C.5.2.9.3 Kapitalafkastgrundlaget – info.skat.dk](https://info.skat.dk/data.aspx?oid=1948905)
 - [Depositum og forudbetalt leje – Lejeloven.dk](https://www.lejeloven.dk/udlejer/indskud)
@@ -122,6 +125,7 @@ En realkreditydelse består af tre dele: **renter**, **bidrag** (det løbende ad
 **Konsekvens for appen**: da den korrekte fordeling kun kendes fra realkreditinstituttets årsopgørelse – som modtages **én gang årligt**, ikke løbende – giver det ikke mening at bogføre beløbet som enkelte posteringer pr. bankhævning (kvartalsvise termins-udtræk fra kontoen). I stedet er der tilføjet ét samlet årligt felt på VSO-siden, **"Realkreditrenter og -bidrag i alt"**, der indtastes direkte fra opgørelsen og indgår i rubrik 117-beregningen i `RapporterView.vue`/`VsoView.vue`/`SelvangivelseView.vue`. De hidtidige bogføringskategorier `realkreditrenter`/`realkreditbidrag` er fjernet fra "Registrér postering" (`useTransactions.js`), så de ikke længere kan vælges til nye posteringer. Beregningerne holder fortsat evt. **ældre** posteringer i disse to kategorier ude af driftsudgifterne (for at undgå dobbelttælling med det nye felt, hvis der findes gamle data fra før omlægningen) – de bør ryddes op/slettes manuelt, når det korrekte årlige tal er indtastet i det nye felt, men vises stadig i posteringslisten (uden kategori-label) indtil da. CSV-importens advarsel ved en realkreditlinje er opdateret til at forklare dette i stedet for at bede brugeren "rette beløbet til kun renteudgiften" (som fejlagtigt udelod det fradragsberettigede bidrag).
 
 Kilder:
+
 - [Ligningsloven § 5 – danskelove.dk](https://danskelove.dk/ligningsloven/5)
 - Diverse rådgivningskilder (Findbank.dk, Howden Realkredit) der bekræfter at bidrag er fradragsberettiget på linje med renter i kapitalindkomsten
 

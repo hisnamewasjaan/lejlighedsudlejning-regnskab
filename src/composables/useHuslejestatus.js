@@ -1,6 +1,16 @@
 const MAANEDSNAVNE = [
-  'januar', 'februar', 'marts', 'april', 'maj', 'juni',
-  'juli', 'august', 'september', 'oktober', 'november', 'december',
+  'januar',
+  'februar',
+  'marts',
+  'april',
+  'maj',
+  'juni',
+  'juli',
+  'august',
+  'september',
+  'oktober',
+  'november',
+  'december',
 ]
 
 /**

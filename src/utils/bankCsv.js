@@ -91,7 +91,8 @@ export function foreslaaKategori(row) {
     return {
       type: 'udgift',
       kategori: 'anden_udgift',
-      advarsel: 'Bankens beløb blander renter, bidrag og afdrag på hele lånet. Bogfør denne linje ikke - indtast i stedet årets samlede renter og bidrag som ét tal på VSO-siden, ud fra realkreditinstituttets årsopgørelse, jf. SKATTEREGLER.md punkt 9.',
+      advarsel:
+        'Bankens beløb blander renter, bidrag og afdrag på hele lånet. Bogfør denne linje ikke - indtast i stedet årets samlede renter og bidrag som ét tal på VSO-siden, ud fra realkreditinstituttets årsopgørelse, jf. SKATTEREGLER.md punkt 9.',
     }
   }
 
