@@ -17,7 +17,23 @@ kommentarer, så begrundelsen står her i stedet:
   bekræftet ved at læse koden direkte: de flaggede funktioner er reelt 6-8 linjer, ikke de 94-256
   linjer værktøjet rapporterer.
 
-Bevidst **ikke** undertrykt (strukturelle fund til den planlagte refaktorering af Vue-views):
-big v-if (×6), "huge file" på `VsoView.vue`, kompleksitet/funktionsstørrelse på `definerSkema` i
-`src/db/index.js` (bevidst append-only migrations-mønster, jf. CLAUDE.md), funktionsstørrelse på
-`useVsoSettings`-komposablens setup-funktion, og "long script block" på `e2e/navigation.spec.js`.
+**Efter den strukturelle refaktorering** af `VsoView.vue` (splittet i `useVsoStamdataForm.js`,
+`useVsoTransaktionsopsummering.js`, og 4 komponenter i `src/components/vso/`) samt udtrækning af
+`BeregningTrin.vue`, `BogforingFasteTemplates.vue`/`BogforingPosteringer.vue`,
+`StamdataLejlighedsoplysninger.vue`/`StamdataLejere.vue` og `CsvImportPreviewTabel.vue`, er
+fejltallet faldet fra 48 til 10. To af de oprindelige 6 "big v-if"-fund (CsvImport, StamdataView)
+forsvandt reelt, fordi parent nu gater hele child-komponenten i stedet for et internt v-if. De
+resterende er bevidst undertrykt, samme mønster som ovenfor:
+
+- **bigVif** (`BeregningTrin.vue`, `BogforingFasteTemplates.vue`, `BogforingPosteringer.vue`,
+  `vso/HaevningsBeregner.vue`): hver er allerede den mindst meningsfulde komponentgrænse - et
+  "liste vs. tom-tilstand"-v-if/v-else. Yderligere splitting ville blot flytte betingelsen ind i
+  endnu en fil, ikke fjerne den.
+- **functionSize** (`useVsoStamdataForm.js`, `useVsoTransaktionsopsummering.js`): samme årsag som
+  `useVsoSettings.js` nedenfor - værktøjet måler hele composable-setup-funktionen som "én funktion".
+
+Bevidst **fortsat ikke** undertrykt (uden for denne refaktorerings scope):
+kompleksitet/funktionsstørrelse på `definerSkema` i `src/db/index.js` (bevidst append-only
+migrations-mønster, jf. CLAUDE.md) og funktionsstørrelse på `useVsoSettings`-komposablens
+setup-funktion (samme årsag som ovenfor, men efterladt synlig som dokumentation af mønsteret), samt
+"long script block" på `e2e/navigation.spec.js` (splitting af e2e-specs er en separat beslutning).

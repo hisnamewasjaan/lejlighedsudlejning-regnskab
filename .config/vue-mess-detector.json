@@ -8,6 +8,12 @@
     "src/composables/useVsoSettings.js": "elseCondition",
     "src/views/BogforingView.vue": "functionSize",
     "src/views/StamdataView.vue": "functionSize",
-    "e2e/navigation.spec.js": "functionSize"
+    "e2e/navigation.spec.js": "functionSize",
+    "src/composables/useVsoStamdataForm.js": "functionSize",
+    "src/composables/useVsoTransaktionsopsummering.js": "functionSize",
+    "src/components/BeregningTrin.vue": "bigVif",
+    "src/components/BogforingFasteTemplates.vue": "bigVif",
+    "src/components/BogforingPosteringer.vue": "bigVif",
+    "src/components/vso/HaevningsBeregner.vue": "bigVif"
   }
 }
