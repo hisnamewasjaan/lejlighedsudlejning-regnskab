@@ -9,6 +9,7 @@ import {
   beregnAaretsOverskud,
   beregnKapitalafkast,
   beregnKapitalafkastgrundlag,
+  beregnOpsparetIAar,
   beregnVirksomhedsskat,
 } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
@@ -55,7 +56,7 @@ const aaretsOverskud = computed(() =>
 )
 
 const opsparValg = computed(() => settings.value?.opsparValg ?? 'haev')
-const opsparetIAar = computed(() => (opsparValg.value === 'opspar' ? Math.max(0, aaretsOverskud.value) : 0))
+const opsparetIAar = computed(() => beregnOpsparetIAar(opsparValg.value, aaretsOverskud.value))
 const virksomhedsskat = computed(() => beregnVirksomhedsskat(opsparetIAar.value))
 const nettoTilRaadighed = computed(() => opsparetIAar.value - virksomhedsskat.value)
 

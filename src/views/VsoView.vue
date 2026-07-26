@@ -10,6 +10,7 @@ import {
   beregnForslagTilHensatNaesteAar,
   beregnKapitalafkast,
   beregnKapitalafkastgrundlag,
+  beregnOpsparetIAar,
   beregnVirksomhedsskat,
   fordelHaevning,
 } from '@/composables/useVsoBeregning'
@@ -52,7 +53,7 @@ const aaretsOverskud = computed(() =>
   }),
 )
 
-const opsparetIAar = computed(() => (form.opsparValg === 'opspar' ? Math.max(0, aaretsOverskud.value) : 0))
+const opsparetIAar = computed(() => beregnOpsparetIAar(form.opsparValg, aaretsOverskud.value))
 const virksomhedsskat = computed(() => beregnVirksomhedsskat(opsparetIAar.value))
 
 // Forslag til næste års "hensat til senere hævning" (beskattetTilRaadighed primo næste år): den del

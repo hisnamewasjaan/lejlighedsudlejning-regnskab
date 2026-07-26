@@ -4,9 +4,24 @@ import {
   beregnForslagTilHensatNaesteAar,
   beregnKapitalafkast,
   beregnKapitalafkastgrundlag,
+  beregnOpsparetIAar,
   beregnVirksomhedsskat,
   fordelHaevning,
 } from '@/composables/useVsoBeregning'
+
+describe('beregnOpsparetIAar', () => {
+  it('returnerer 0 hvis valget er at hæve overskuddet', () => {
+    expect(beregnOpsparetIAar('haev', 100_000)).toBe(0)
+  })
+
+  it('returnerer hele overskuddet hvis valget er at opspare', () => {
+    expect(beregnOpsparetIAar('opspar', 100_000)).toBe(100_000)
+  })
+
+  it('returnerer 0 ved opspar-valg hvis overskuddet er negativt', () => {
+    expect(beregnOpsparetIAar('opspar', -50_000)).toBe(0)
+  })
+})
 
 describe('beregnKapitalafkast', () => {
   it('beregner kapitalafkast som grundlag gange sats', () => {

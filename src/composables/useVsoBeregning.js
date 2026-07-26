@@ -53,6 +53,16 @@ export function beregnKapitalafkast(kapitalafkastgrundlag, kapitalafkastsats) {
 }
 
 /**
+ * Den del af årets overskud der rent faktisk opspares i VSO (og dermed er grundlag for den
+ * foreløbige virksomhedsskat), afhængig af brugerens hæv/opspar-valg for året.
+ * @param {string} opsparValg 'haev' eller 'opspar'
+ * @param {number} aaretsOverskud
+ */
+export function beregnOpsparetIAar(opsparValg, aaretsOverskud) {
+  return opsparValg === 'opspar' ? Math.max(0, aaretsOverskud) : 0
+}
+
+/**
  * Fordeler en hævning efter hæverækkefølgen i VSL § 5, med et ekstra trin foran de fire lovbestemte:
  * 0. Allerede beskattet beløb til rådighed (fx "hensat til senere hævning", jf. revisorens opgørelse
  *    efter årsafslutning – ingen yderligere skattemæssige konsekvenser ved hævning).
