@@ -12,10 +12,10 @@ kommentarer, så begrundelsen står her i stedet:
 - **elseCondition** (`useProperty.js`, `useTenants.js`, `useVsoSettings.js`): reel gensidigt
   udelukkende branching (isRef-dispatch, update-vs-add), ikke et undgåeligt early-return-mønster –
   tvungen omskrivning ville gøre koden mindre klar, ikke mere.
-- **functionSize** (`BogforingView.vue`, `StamdataView.vue`, `e2e/navigation.spec.js`): parser-fejl i
-  værktøjet med `() => ({ ... })`-mønsteret (arrow-function der returnerer et objekt-literal) –
-  bekræftet ved at læse koden direkte: de flaggede funktioner er reelt 6-8 linjer, ikke de 94-256
-  linjer værktøjet rapporterer.
+- **functionSize** (`BogforingView.vue`, `StamdataView.vue`): parser-fejl i værktøjet med
+  `() => ({ ... })`-mønsteret (arrow-function der returnerer et objekt-literal) – bekræftet ved at
+  læse koden direkte: de flaggede funktioner er reelt 6-8 linjer, ikke de 94-105 linjer værktøjet
+  rapporterer.
 
 **Efter den strukturelle refaktorering** af `VsoView.vue` (splittet i `useVsoStamdataForm.js`,
 `useVsoTransaktionsopsummering.js`, og 4 komponenter i `src/components/vso/`) samt udtrækning af
@@ -32,8 +32,13 @@ resterende er bevidst undertrykt, samme mønster som ovenfor:
 - **functionSize** (`useVsoStamdataForm.js`, `useVsoTransaktionsopsummering.js`): samme årsag som
   `useVsoSettings.js` nedenfor - værktøjet måler hele composable-setup-funktionen som "én funktion".
 
+**2026-07-26, opfølgning**: `e2e/navigation.spec.js`s "long script block"-fund (363 linjer, 16 tests)
+er løst ved at splitte filen op efter side/feature (`stamdata.spec.js`, `bogforing.spec.js`,
+`vso.spec.js`, `dashboard.spec.js`, `rapporter.spec.js`, `csv-import.spec.js`), med den fælles
+ejendoms-opsætning udtrukket til `e2e/helpers.js` (`opretTestEjendom`). Ingen testlogik ændret, kun
+flyttet. Alle 7 filer lander under 100 linjer; fundet er derfor helt væk, ikke undertrykt.
+
 Bevidst **fortsat ikke** undertrykt (uden for denne refaktorerings scope):
 kompleksitet/funktionsstørrelse på `definerSkema` i `src/db/index.js` (bevidst append-only
 migrations-mønster, jf. CLAUDE.md) og funktionsstørrelse på `useVsoSettings`-komposablens
-setup-funktion (samme årsag som ovenfor, men efterladt synlig som dokumentation af mønsteret), samt
-"long script block" på `e2e/navigation.spec.js` (splitting af e2e-specs er en separat beslutning).
+setup-funktion (samme årsag som ovenfor, men efterladt synlig som dokumentation af mønsteret).
