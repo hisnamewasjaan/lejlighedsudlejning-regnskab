@@ -16,10 +16,6 @@ const { property } = useProperty(ejendom)
 const { transactions } = useTransactions()
 const { settings } = useVsoSettings(ejendom, aar)
 
-const kategoriLabels = Object.fromEntries(
-  [...INDTAEGT_KATEGORIER, ...UDGIFT_KATEGORIER].map((k) => [k.value, k.label]),
-)
-
 const aaretsTransaktioner = computed(() =>
   transactions.value.filter((t) => t.ejendomId === ejendom.value && t.dato?.startsWith(String(aar.value))),
 )
@@ -46,7 +42,9 @@ const DRIFT_UDGIFT_KATEGORIER = UDGIFT_KATEGORIER.filter(
   (k) => k.value !== 'realkreditrenter' && k.value !== 'realkreditbidrag' && k.value !== 'depositum_tilbagebetaling',
 )
 
-const indtaegtsLinjer = computed(() => summerPrKategori('indtaegt', DRIFT_INDTAEGT_KATEGORIER).filter((l) => l.belob !== 0))
+const indtaegtsLinjer = computed(() =>
+  summerPrKategori('indtaegt', DRIFT_INDTAEGT_KATEGORIER).filter((l) => l.belob !== 0),
+)
 const udgiftsLinjer = computed(() => summerPrKategori('udgift', DRIFT_UDGIFT_KATEGORIER).filter((l) => l.belob !== 0))
 
 const indtaegterIAlt = computed(() => indtaegtsLinjer.value.reduce((sum, l) => sum + l.belob, 0))
@@ -101,8 +99,18 @@ const maanedsoversigt = computed(() => {
 })
 
 const MAANEDSNAVNE = [
-  'Januar', 'Februar', 'Marts', 'April', 'Maj', 'Juni',
-  'Juli', 'August', 'September', 'Oktober', 'November', 'December',
+  'Januar',
+  'Februar',
+  'Marts',
+  'April',
+  'Maj',
+  'Juni',
+  'Juli',
+  'August',
+  'September',
+  'Oktober',
+  'November',
+  'December',
 ]
 
 function eksporterPdf() {
@@ -119,7 +127,10 @@ function eksporterPdf() {
           År
           <input v-model.number="aar" type="number" class="w-24 rounded border border-slate-300 px-2 py-1" />
         </label>
-        <button class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700" @click="eksporterPdf">
+        <button
+          class="rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
+          @click="eksporterPdf"
+        >
           Eksportér til PDF
         </button>
       </div>
@@ -156,12 +167,11 @@ function eksporterPdf() {
           </tbody>
         </table>
         <p class="mt-3 text-xs text-slate-500">
-          De enkelte kategorier indberettes ikke hver for sig til SKAT – driftsresultatet indgår
-          samlet i rubrik {{ RUBRIK.overskudVirksomhed }} (Overskud virksomhed/udlejningsejendom).
-          Renteindtægter og -udgifter i virksomheden holdes uden for driftsresultatet her og vises
-          i stedet for sig selv nedenfor (rubrik {{ RUBRIK.renteindtaegtVirksomhed }} og
-          {{ RUBRIK.renteudgiftVirksomhed }}), da TastSelv opgør dem særskilt fra rubrik
-          {{ RUBRIK.overskudVirksomhed }}.
+          De enkelte kategorier indberettes ikke hver for sig til SKAT – driftsresultatet indgår samlet i rubrik
+          {{ RUBRIK.overskudVirksomhed }} (Overskud virksomhed/udlejningsejendom). Renteindtægter og -udgifter i
+          virksomheden holdes uden for driftsresultatet her og vises i stedet for sig selv nedenfor (rubrik
+          {{ RUBRIK.renteindtaegtVirksomhed }} og {{ RUBRIK.renteudgiftVirksomhed }}), da TastSelv opgør dem særskilt
+          fra rubrik {{ RUBRIK.overskudVirksomhed }}.
         </p>
       </section>
 
@@ -224,8 +234,8 @@ function eksporterPdf() {
           </tbody>
         </table>
         <p class="mt-3 text-xs text-slate-500">
-          Bygningsafskrivning indgår ikke, da lejligheden anvendes til beboelse (afskrivningsloven § 14, stk. 2,
-          nr. 4 – se SKATTEREGLER.md). Valg om opsparing af overskud foretages på VSO-siden.
+          Bygningsafskrivning indgår ikke, da lejligheden anvendes til beboelse (afskrivningsloven § 14, stk. 2, nr. 4 –
+          se SKATTEREGLER.md). Valg om opsparing af overskud foretages på VSO-siden.
         </p>
       </section>
 
