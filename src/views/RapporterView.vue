@@ -3,7 +3,11 @@ import { computed } from 'vue'
 import { useProperty } from '@/composables/useProperty'
 import { useTransactions, INDTAEGT_KATEGORIER, UDGIFT_KATEGORIER } from '@/composables/useTransactions'
 import { useVsoSettings } from '@/composables/useVsoSettings'
-import { useVsoTransaktionsopsummering } from '@/composables/useVsoTransaktionsopsummering'
+import {
+  IKKE_DRIFT_INDTAEGT_KATEGORIER,
+  IKKE_DRIFT_UDGIFT_KATEGORIER,
+  useVsoTransaktionsopsummering,
+} from '@/composables/useVsoTransaktionsopsummering'
 import { beregnAaretsOverskud, beregnKapitalafkast, beregnKapitalafkastgrundlag } from '@/composables/useVsoBeregning'
 import { RUBRIK } from '@/constants/skatRubrikker'
 import { useValgtAar } from '@/composables/useValgtAar'
@@ -34,18 +38,11 @@ function summerPrKategori(type, kategorier) {
   }))
 }
 
-// Renteindtægt/-udgift i virksomheden (TastSelv rubrik 114/117) holdes uden for driftsresultatet
-// (rubrik 111) og resultatopgørelsen herunder – de indgår først i "Skattemæssig opgørelse"
-// nedenfor, jf. den faktiske rubrikstruktur i TastSelv (se vso-tal.md, bekræftet for 2020-2024).
-// Depositum ind/ud er hverken indtægt eller udgift - det er en tilbagebetalingspligtig gæld til
-// lejeren (samme princip som "skyldigt depositum" i kapitalafkastgrundlaget) og holdes derfor helt
-// uden for både driftsresultatet og årets overskud, uden at blive lagt til igen som renterne gør.
-const DRIFT_INDTAEGT_KATEGORIER = INDTAEGT_KATEGORIER.filter(
-  (k) => k.value !== 'renteindtaegt' && k.value !== 'depositum',
-)
-const DRIFT_UDGIFT_KATEGORIER = UDGIFT_KATEGORIER.filter(
-  (k) => k.value !== 'realkreditrenter' && k.value !== 'realkreditbidrag' && k.value !== 'depositum_tilbagebetaling',
-)
+// Se IKKE_DRIFT_INDTAEGT_KATEGORIER/IKKE_DRIFT_UDGIFT_KATEGORIER (useVsoTransaktionsopsummering.js)
+// for begrundelsen: renteindtægt/-udgift indgår først i "Skattemæssig opgørelse" nedenfor (rubrik
+// 114/117/149), og depositum er en gæld til lejeren, ikke en indtægt/udgift.
+const DRIFT_INDTAEGT_KATEGORIER = INDTAEGT_KATEGORIER.filter((k) => !IKKE_DRIFT_INDTAEGT_KATEGORIER.includes(k.value))
+const DRIFT_UDGIFT_KATEGORIER = UDGIFT_KATEGORIER.filter((k) => !IKKE_DRIFT_UDGIFT_KATEGORIER.includes(k.value))
 
 const indtaegtsLinjer = computed(() =>
   summerPrKategori('indtaegt', DRIFT_INDTAEGT_KATEGORIER).filter((l) => l.belob !== 0),

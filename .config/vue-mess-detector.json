@@ -13,6 +13,7 @@
     "src/components/BeregningTrin.vue": "bigVif",
     "src/components/BogforingFasteTemplates.vue": "bigVif",
     "src/components/BogforingPosteringer.vue": "bigVif",
-    "src/components/vso/HaevningsBeregner.vue": "bigVif"
+    "src/components/vso/HaevningsBeregner.vue": "bigVif",
+    "src/composables/useVsoBeregning.js": "cyclomaticComplexity"
   }
 }

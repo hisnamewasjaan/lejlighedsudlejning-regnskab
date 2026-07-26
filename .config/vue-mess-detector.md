@@ -55,3 +55,11 @@ funktionsstørrelse på `definerSkema` i `src/db/index.js` (73 linjer efter migr
 stadig over grænsen, men et iboende træk ved et versioneret append-only skema, jf. CLAUDE.md - vokser
 med antallet af versioner, ikke noget der kan "rettes" uden at ændre selve mønsteret) og
 funktionsstørrelse på `useVsoSettings`-komposablens setup-funktion (samme årsag som ovenfor).
+
+**2026-07-26, opfølgning 3**: da forretningsregler blev adskilt fra UI-lag (`beregnOpsparetIAar`
+tilføjet til `useVsoBeregning.js`), tippede filens samlede if/for-optælling "cyclomatic complexity"
+over i "very high". Samme lærdom som opfølgning 2: reglen er ikke per-funktion-scoped, men her giver
+det ikke mening at flytte kode ud for at dodge tallet - `useVsoBeregning.js` er bevidst ét samlet,
+velafgrænset modul af små, rene VSO-beregningsfunktioner (den mest testede del af appen, jf.
+CLAUDE.md), og at fragmentere det for en linter-metrik ville skade sammenhængen, ikke forbedre den.
+Undertrykt med samme begrundelse som `useVsoSettings.js`/`definerSkema`.
