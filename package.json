@@ -25,6 +25,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "mess": "vue-mess-detector check ./src -l error",
+    "check": "npm run lint && npm run format:check && npm run mess && npm test",
     "prepare": "husky"
   },
   "lint-staged": {
