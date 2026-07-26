@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { ref } from 'vue'
+import { udledFoelgeposteringerForNyLejer } from '@/composables/useTenants'
 import { nulstilDatabase, ventPaa } from './setup/testDb'
 
 let db
@@ -69,5 +70,46 @@ describe('useTenants', () => {
 
     ejendomId.value = 2
     await ventPaa(() => tenants.value.map((t) => t.navn).join() === 'Ejendom 2-lejer')
+  })
+})
+
+describe('udledFoelgeposteringerForNyLejer', () => {
+  const basisForm = {
+    navn: 'Jane Doe',
+    lejemaalStart: '2026-01-01',
+    lejemaalSlut: '',
+    maanedligHusleje: null,
+    depositum: null,
+  }
+
+  it('foreslår hverken skabelon eller depositum hvis ingen af felterne er udfyldt', () => {
+    const { recurringTemplate, depositumTransaktion } = udledFoelgeposteringerForNyLejer(basisForm, 1)
+    expect(recurringTemplate).toBeNull()
+    expect(depositumTransaktion).toBeNull()
+  })
+
+  it('foreslår en månedlig husleje-skabelon hvis maanedligHusleje er udfyldt', () => {
+    const { recurringTemplate } = udledFoelgeposteringerForNyLejer({ ...basisForm, maanedligHusleje: 8000 }, 42)
+    expect(recurringTemplate).toEqual({
+      type: 'indtaegt',
+      kategori: 'husleje',
+      belob: 8000,
+      hyppighed: 'maanedlig',
+      startDato: '2026-01-01',
+      slutDato: '',
+      tenantId: 42,
+    })
+  })
+
+  it('foreslår en depositum-transaktion hvis depositum er udfyldt', () => {
+    const { depositumTransaktion } = udledFoelgeposteringerForNyLejer({ ...basisForm, depositum: 24000 }, 42)
+    expect(depositumTransaktion).toEqual({
+      type: 'indtaegt',
+      kategori: 'depositum',
+      dato: '2026-01-01',
+      belob: 24000,
+      note: 'Depositum fra Jane Doe',
+      tenantId: 42,
+    })
   })
 })

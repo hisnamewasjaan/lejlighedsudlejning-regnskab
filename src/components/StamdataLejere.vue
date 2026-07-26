@@ -1,6 +1,6 @@
 <script setup>
 import { computed, reactive } from 'vue'
-import { useTenants } from '@/composables/useTenants'
+import { udledFoelgeposteringerForNyLejer, useTenants } from '@/composables/useTenants'
 import { useTransactions } from '@/composables/useTransactions'
 import { useRecurringTransactions } from '@/composables/useRecurringTransactions'
 
@@ -28,27 +28,12 @@ async function onAddTenant() {
   }
   const tenantId = await addTenant({ ...tenantForm })
 
-  if (tenantForm.maanedligHusleje) {
-    await addRecurringTemplate({
-      type: 'indtaegt',
-      kategori: 'husleje',
-      belob: tenantForm.maanedligHusleje,
-      hyppighed: 'maanedlig',
-      startDato: tenantForm.lejemaalStart,
-      slutDato: tenantForm.lejemaalSlut || '',
-      tenantId,
-    })
+  const { recurringTemplate, depositumTransaktion } = udledFoelgeposteringerForNyLejer(tenantForm, tenantId)
+  if (recurringTemplate) {
+    await addRecurringTemplate(recurringTemplate)
   }
-
-  if (tenantForm.depositum) {
-    await addTransaction({
-      type: 'indtaegt',
-      kategori: 'depositum',
-      dato: tenantForm.lejemaalStart,
-      belob: tenantForm.depositum,
-      note: `Depositum fra ${tenantForm.navn}`,
-      tenantId,
-    })
+  if (depositumTransaktion) {
+    await addTransaction(depositumTransaktion)
   }
 
   Object.assign(tenantForm, {

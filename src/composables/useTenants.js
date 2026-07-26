@@ -46,3 +46,38 @@ export function useTenants(ejendomId) {
 
   return { tenants, loading, addTenant, updateTenant, deleteTenant }
 }
+
+/**
+ * Udleder hvilke følgeposteringer (fast husleje-skabelon og/eller en depositum-transaktion) der skal
+ * oprettes, når en ny lejer tilføjes med de angivne stamdata. Ren beslutningsfunktion - selve
+ * DB-skrivningen foretages af den kaldende kode via addRecurringTemplate/addTransaction.
+ * @param {{ navn: string, lejemaalStart: string, lejemaalSlut?: string, maanedligHusleje?: number|null, depositum?: number|null }} tenantForm
+ * @param {number} tenantId
+ * @returns {{ recurringTemplate: object|null, depositumTransaktion: object|null }}
+ */
+export function udledFoelgeposteringerForNyLejer(tenantForm, tenantId) {
+  const recurringTemplate = tenantForm.maanedligHusleje
+    ? {
+        type: 'indtaegt',
+        kategori: 'husleje',
+        belob: tenantForm.maanedligHusleje,
+        hyppighed: 'maanedlig',
+        startDato: tenantForm.lejemaalStart,
+        slutDato: tenantForm.lejemaalSlut || '',
+        tenantId,
+      }
+    : null
+
+  const depositumTransaktion = tenantForm.depositum
+    ? {
+        type: 'indtaegt',
+        kategori: 'depositum',
+        dato: tenantForm.lejemaalStart,
+        belob: tenantForm.depositum,
+        note: `Depositum fra ${tenantForm.navn}`,
+        tenantId,
+      }
+    : null
+
+  return { recurringTemplate, depositumTransaktion }
+}
