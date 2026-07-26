@@ -43,7 +43,7 @@ const antalValgt = computed(() => rows.value.filter((r) => r.medtag).length)
         </tr>
       </thead>
       <tbody class="divide-y divide-slate-100">
-        <tr v-for="(row, i) in rows" :key="i" :class="row.duplikat ? 'opacity-50' : ''">
+        <tr v-for="row in rows" :key="row.id" :class="row.duplikat ? 'opacity-50' : ''">
           <td class="py-2"><input v-model="row.medtag" type="checkbox" /></td>
           <td class="py-2 whitespace-nowrap">{{ row.dato }}</td>
           <td class="py-2">

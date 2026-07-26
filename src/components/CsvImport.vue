@@ -30,11 +30,14 @@ async function onFileChange(event) {
   const tekst = decodeCsvBuffer(await file.arrayBuffer())
   const parsedeRows = parseBankCsv(tekst)
 
-  rows.value = parsedeRows.map((row) => {
+  rows.value = parsedeRows.map((row, i) => {
     const duplikat = erDuplikat(row)
     const forslag = foreslaaKategori(row)
     return {
       ...row,
+      // Stabilt id til :key i CsvImportPreviewTabel.vue - tildelt én gang her ved indlæsning,
+      // ikke afledt af arrayets aktuelle position (rows kan i teorien blive omarrangeret/filtreret).
+      id: i,
       // Linjer med en advarsel (fx realkredit, hvor beløbet sandsynligvis blander renter og
       // afdrag) fravælges som standard - brugeren skal aktivt rette beløbet og medtage linjen.
       medtag: !duplikat && !forslag.advarsel,
