@@ -16,3 +16,4 @@ test-results
 # personfølsomme tal/adresser, så hele mappen holdes ude af git uden exceptions.
 vso-tal.md
 [Uu]dlejning*/**
+todo.md
