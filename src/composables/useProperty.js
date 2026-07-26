@@ -16,7 +16,9 @@ export function useProperty(ejendomId) {
   }
 
   async function save(data) {
-    if (!property.value?.id) return
+    if (!property.value?.id) {
+      return
+    }
     await db.property.update(property.value.id, data)
     await load()
   }

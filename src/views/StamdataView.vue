@@ -26,7 +26,9 @@ const nyEjendomForm = reactive(emptyNyEjendomForm())
 const visOpretForm = ref(false)
 
 async function onAddEjendom() {
-  if (!nyEjendomForm.adresse) return
+  if (!nyEjendomForm.adresse) {
+    return
+  }
   await addEjendom({ ...nyEjendomForm })
   Object.assign(nyEjendomForm, emptyNyEjendomForm())
   visOpretForm.value = false
@@ -66,7 +68,9 @@ const tenantForm = reactive({
 })
 
 async function onAddTenant() {
-  if (!tenantForm.navn || !tenantForm.lejemaalStart) return
+  if (!tenantForm.navn || !tenantForm.lejemaalStart) {
+    return
+  }
   const tenantId = await addTenant({ ...tenantForm })
 
   if (tenantForm.maanedligHusleje) {
@@ -106,7 +110,9 @@ const importFejl = ref(null)
 
 async function onImportBackup(event) {
   const file = event.target.files?.[0]
-  if (!file) return
+  if (!file) {
+    return
+  }
   if (!confirm('Import overskriver al eksisterende data i appen med indholdet af backup-filen. Fortsæt?')) {
     event.target.value = ''
     return

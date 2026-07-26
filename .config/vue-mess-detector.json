@@ -1,0 +1,13 @@
+{
+  "fileIgnoreRules": {
+    "src/views/RapporterView.vue": "globalStyle,computedSideEffects",
+    "src/views/BeregningView.vue": "globalStyle",
+    "src/views/DashboardView.vue": "computedSideEffects",
+    "src/composables/useProperty.js": "elseCondition",
+    "src/composables/useTenants.js": "elseCondition",
+    "src/composables/useVsoSettings.js": "elseCondition",
+    "src/views/BogforingView.vue": "functionSize",
+    "src/views/StamdataView.vue": "functionSize",
+    "e2e/navigation.spec.js": "functionSize"
+  }
+}

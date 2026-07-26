@@ -88,12 +88,15 @@ const maanedsoversigt = computed(() => {
     udgifter: 0,
   }))
   for (const t of aaretsTransaktioner.value) {
-    if (t.kategori === 'depositum' || t.kategori === 'depositum_tilbagebetaling') continue
+    if (t.kategori === 'depositum' || t.kategori === 'depositum_tilbagebetaling') {
+      continue
+    }
     const maaned = Number(t.dato.slice(5, 7))
     const linje = maaneder[maaned - 1]
-    if (!linje) continue
-    if (t.type === 'indtaegt') linje.indtaegter += t.belob
-    else linje.udgifter += t.belob
+    if (!linje) {
+      continue
+    }
+    linje[t.type === 'indtaegt' ? 'indtaegter' : 'udgifter'] += t.belob
   }
   return maaneder
 })

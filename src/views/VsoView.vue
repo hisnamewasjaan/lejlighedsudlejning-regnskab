@@ -159,7 +159,9 @@ const forslagTilHensatNaesteAar = computed(() =>
 const naesteAarsForslagGemt = ref(false)
 
 async function brugForslagSomNaesteAarsHensat() {
-  if (!naesteAarsSettings.value) return
+  if (!naesteAarsSettings.value) {
+    return
+  }
   naesteAarsForslagGemt.value = false
   await gemNaesteAarsSettings({
     ...naesteAarsSettings.value,
@@ -172,7 +174,9 @@ const haevningBeloeb = ref(null)
 const haevningResultat = ref(null)
 
 function beregnHaevning() {
-  if (!haevningBeloeb.value) return
+  if (!haevningBeloeb.value) {
+    return
+  }
   haevningResultat.value = fordelHaevning(haevningBeloeb.value, {
     beskattetTilRaadighed: form.beskattetTilRaadighed,
     kapitalafkast: kapitalafkast.value,

@@ -42,7 +42,9 @@ function onTemplateTypeChange() {
 }
 
 async function onAddTemplate() {
-  if (!templateForm.belob || !templateForm.startDato) return
+  if (!templateForm.belob || !templateForm.startDato) {
+    return
+  }
   await addTemplate({ ...templateForm })
   Object.assign(templateForm, emptyTemplateForm())
 }
@@ -78,8 +80,12 @@ const emptyForm = () => ({
 const form = reactive(emptyForm())
 
 const kategoriMuligheder = computed(() => {
-  if (form.type === 'indtaegt') return INDTAEGT_KATEGORIER
-  if (form.type === 'udgift') return UDGIFT_KATEGORIER
+  if (form.type === 'indtaegt') {
+    return INDTAEGT_KATEGORIER
+  }
+  if (form.type === 'udgift') {
+    return UDGIFT_KATEGORIER
+  }
   return []
 })
 
@@ -93,7 +99,9 @@ const TYPE_KLASSER = { indtaegt: 'text-emerald-700', udgift: 'text-red-700', hae
 const saved = ref(false)
 
 async function onSubmit() {
-  if (!form.dato || !form.belob) return
+  if (!form.dato || !form.belob) {
+    return
+  }
   saved.value = false
   await addTransaction({ ...form })
   Object.assign(form, emptyForm())

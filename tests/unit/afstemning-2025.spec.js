@@ -29,8 +29,12 @@ function kategoriser(row) {
 
   if (row.underkategori === 'Lejeindtægt') return { type: 'indtaegt', kategori: 'husleje' }
   if (row.underkategori === 'Fællesudgifter') return { type: 'udgift', kategori: 'ejerforening' }
-  if (row.underkategori === 'Ejendomsskat') return null
-  if (row.underkategori === 'Realkreditlån') return null
+  if (row.underkategori === 'Ejendomsskat') {
+    return null
+  }
+  if (row.underkategori === 'Realkreditlån') {
+    return null
+  }
   if (tekst.startsWith('revisor')) return { type: 'udgift', kategori: 'revisor' }
   if (tekst.startsWith('deposit')) return { type: 'udgift', kategori: 'depositum_tilbagebetaling' }
   if (tekst.includes('consumpt')) return { type: 'udgift', kategori: 'anden_udgift' }

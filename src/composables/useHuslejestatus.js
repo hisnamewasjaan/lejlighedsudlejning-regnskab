@@ -29,7 +29,9 @@ export function findAktivLejer(tenants, paaDato) {
  * @param {{ tenant: object, transactions: Array, aar: number, tilOgMedMaaned: number }} params
  */
 export function beregnHuslejestatus({ tenant, transactions, aar, tilOgMedMaaned }) {
-  if (!tenant) return []
+  if (!tenant) {
+    return []
+  }
 
   const lejemaalStartAar = Number(tenant.lejemaalStart.slice(0, 4))
   const lejemaalStartMaaned = lejemaalStartAar === aar ? Number(tenant.lejemaalStart.slice(5, 7)) : 1
@@ -39,7 +41,9 @@ export function beregnHuslejestatus({ tenant, transactions, aar, tilOgMedMaaned 
       : 12
 
   const startMaaned = lejemaalStartAar > aar ? null : lejemaalStartMaaned
-  if (startMaaned === null) return []
+  if (startMaaned === null) {
+    return []
+  }
 
   const slutMaaned = Math.min(tilOgMedMaaned, lejemaalSlutMaaned)
   const status = []

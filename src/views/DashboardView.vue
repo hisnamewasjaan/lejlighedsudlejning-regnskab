@@ -17,15 +17,21 @@ const ejendom = useValgtEjendom()
 // For indeværende år vises status frem til nuværende måned; for et afsluttet år vises alle 12
 // måneder; for et fremtidigt år er der endnu intet forfaldent.
 const tilOgMedMaaned = computed(() => {
-  if (aar.value === now.getFullYear()) return now.getMonth() + 1
+  if (aar.value === now.getFullYear()) {
+    return now.getMonth() + 1
+  }
   return aar.value < now.getFullYear() ? 12 : 0
 })
 
 // Hvilken dato skal bruges til at finde den aktive lejer for det valgte år - "i dag" hvis det er
 // indeværende år, ellers en repræsentativ dato inde i det valgte (forgangne) år.
 const referenceDato = computed(() => {
-  if (aar.value === now.getFullYear()) return now
-  if (aar.value < now.getFullYear()) return new Date(aar.value, 11, 31)
+  if (aar.value === now.getFullYear()) {
+    return now
+  }
+  if (aar.value < now.getFullYear()) {
+    return new Date(aar.value, 11, 31)
+  }
   return now
 })
 

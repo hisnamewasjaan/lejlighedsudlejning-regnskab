@@ -12,8 +12,11 @@ function laesGemtEjendomId() {
 const valgtEjendomId = ref(laesGemtEjendomId())
 
 watch(valgtEjendomId, (nyt) => {
-  if (nyt == null) localStorage.removeItem(LAGRET_NOEGLE)
-  else localStorage.setItem(LAGRET_NOEGLE, String(nyt))
+  if (nyt == null) {
+    localStorage.removeItem(LAGRET_NOEGLE)
+    return
+  }
+  localStorage.setItem(LAGRET_NOEGLE, String(nyt))
 })
 
 export function useValgtEjendom() {

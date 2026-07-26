@@ -20,7 +20,9 @@ function erDuplikat(row) {
 
 async function onFileChange(event) {
   const file = event.target.files?.[0]
-  if (!file) return
+  if (!file) {
+    return
+  }
   filnavn.value = file.name
   importeret.value = 0
 
@@ -44,8 +46,12 @@ async function onFileChange(event) {
 }
 
 function kategoriMuligheder(type) {
-  if (type === 'indtaegt') return INDTAEGT_KATEGORIER
-  if (type === 'udgift') return UDGIFT_KATEGORIER
+  if (type === 'indtaegt') {
+    return INDTAEGT_KATEGORIER
+  }
+  if (type === 'udgift') {
+    return UDGIFT_KATEGORIER
+  }
   return []
 }
 
@@ -62,7 +68,9 @@ async function onImporter() {
   let antal = 0
 
   for (const row of rows.value) {
-    if (!row.medtag) continue
+    if (!row.medtag) {
+      continue
+    }
     await addTransaction({
       type: row.type,
       kategori: row.type === 'haevning' ? undefined : row.kategori,

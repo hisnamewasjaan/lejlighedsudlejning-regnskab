@@ -36,7 +36,9 @@ export function useVsoSettings(ejendomId, aar) {
 
   async function save(data) {
     const id = unref(ejendomId)
-    if (id == null) return
+    if (id == null) {
+      return
+    }
     if (settings.value?.id) {
       await db.vsoSettings.update(settings.value.id, data)
     } else {

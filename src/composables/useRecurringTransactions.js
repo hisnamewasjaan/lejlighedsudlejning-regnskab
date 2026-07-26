@@ -13,9 +13,15 @@ export const HYPPIGHED_LABELS = {
 // tidszone (fx UTC-8 gør "2026-01-01" til "2025-12-31" lokalt, hvilket giver en forkert forfaldsdato).
 function naesteDato(dato, hyppighed) {
   const d = new Date(`${dato}T00:00:00Z`)
-  if (hyppighed === 'maanedlig') d.setUTCMonth(d.getUTCMonth() + 1)
-  else if (hyppighed === 'kvartalsvis') d.setUTCMonth(d.getUTCMonth() + 3)
-  else if (hyppighed === 'aarlig') d.setUTCFullYear(d.getUTCFullYear() + 1)
+  if (hyppighed === 'maanedlig') {
+    d.setUTCMonth(d.getUTCMonth() + 1)
+  }
+  if (hyppighed === 'kvartalsvis') {
+    d.setUTCMonth(d.getUTCMonth() + 3)
+  }
+  if (hyppighed === 'aarlig') {
+    d.setUTCFullYear(d.getUTCFullYear() + 1)
+  }
   return d.toISOString().slice(0, 10)
 }
 

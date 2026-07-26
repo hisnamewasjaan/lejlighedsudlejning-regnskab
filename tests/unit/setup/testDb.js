@@ -29,7 +29,9 @@ export async function nulstilDatabase() {
 export async function ventPaa(betingelse, { timeout = 1000, interval = 5 } = {}) {
   const start = Date.now()
   while (!betingelse()) {
-    if (Date.now() - start > timeout) throw new Error('ventPaa: timeout - betingelsen blev aldrig sand')
+    if (Date.now() - start > timeout) {
+      throw new Error('ventPaa: timeout - betingelsen blev aldrig sand')
+    }
     await new Promise((resolve) => setTimeout(resolve, interval))
   }
 }
