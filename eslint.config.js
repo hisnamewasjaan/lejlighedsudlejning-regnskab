@@ -22,6 +22,11 @@ export default [
       eqeqeq: ['error', 'smart'],
       'no-unused-vars': ['error', { ignoreRestSiblings: true }],
       'vue/multi-word-component-names': ['error', { ignores: ['App'] }],
+      // VsoView.vue's `form` er bevidst en delt reaktiv objekt-reference sendt ned som prop til
+      // flere søskende-komponenter (ikke defineModel, da ingen af dem erstatter hele objektet) -
+      // shallowOnly tillader mutation af felter, men fanger stadig en fejlagtig gentildeling af
+      // selve prop'en.
+      'vue/no-mutating-props': ['error', { shallowOnly: true }],
     },
   },
   skipFormatting, // skal stå sidst
